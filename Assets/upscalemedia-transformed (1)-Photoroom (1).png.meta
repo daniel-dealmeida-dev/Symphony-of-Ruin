@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      upscalemedia-transformed (1)-Photoroom (1)_0: 6314706765410223347
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

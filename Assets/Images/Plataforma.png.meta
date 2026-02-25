@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 5f98495d668875049b8189004b35cfaf
+guid: 3c43c7a5ee6f71d48a81f57b4008d017
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5676741272876029023
-    second: Master_0
-  - first:
-      213: 2312864331501031665
-    second: Master_1
+      213: -4560673639104198120
+    second: Plataforma - Copia_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -129,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Master_0
+      name: Plataforma - Copia_0
       rect:
         serializedVersion: 2
-        x: 386
-        y: 1565
-        width: 380
-        height: 326
+        x: 0
+        y: 0
+        width: 1280
+        height: 853
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,29 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1abec6493e92831b0800000000000000
-      internalID: -5676741272876029023
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Master_1
-      rect:
-        serializedVersion: 2
-        x: 386
-        y: 413
-        width: 380
-        height: 326
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1f05accfad1f81020800000000000000
-      internalID: 2312864331501031665
+      spriteID: 81ac4bc1d7b35b0c0800000000000000
+      internalID: -4560673639104198120
       vertices: []
       indices: 
       edges: []
@@ -181,8 +157,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Master_0: -5676741272876029023
-      Master_1: 2312864331501031665
+      Plataforma - Copia_0: -4560673639104198120
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Lua-Primeira fase-1.png_0: -2961150685824511714
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
