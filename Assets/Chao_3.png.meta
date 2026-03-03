@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 25cf15491d2d3b949a2c5b592c45beae
+guid: d23cd77fcc9027045aa8b8b3a17e6ae3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2019156463891135753
-    second: Fundo_0
+      213: 8410157538201811264
+    second: Chao_3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Fundo_0
+      name: Chao_3_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1312
-        height: 752
+        x: 11
+        y: 1
+        width: 1403
+        height: 1023
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7f2c5dfd4e38af3e0800000000000000
-      internalID: -2019156463891135753
+      spriteID: 049b799d8b1e6b470800000000000000
+      internalID: 8410157538201811264
       vertices: []
       indices: 
       edges: []
