@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 277785c19947eaf40802fb70b0a6a075
+guid: 71ea8fba620a77f458970d0cba2fe251
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4288327064157789109
-    second: arvore,pixel-certo_0
+      213: 3610598739861876388
+    second: Layer 2 (2)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: arvore,pixel-certo_0
+      name: Layer 2 (2)_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 212
-        width: 702
-        height: 768
+        y: 0
+        width: 1264
+        height: 848
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b446e24714dcc74c0800000000000000
-      internalID: -4288327064157789109
+      spriteID: 4aea0f39c6c6b1230800000000000000
+      internalID: 3610598739861876388
       vertices: []
       indices: 
       edges: []
@@ -157,7 +157,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      arvore,pixel-certo_0: -4288327064157789109
+      Layer 2 (2)_0: 3610598739861876388
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

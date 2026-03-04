@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      CHao_2-no-background_0: -8913897033234220805
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

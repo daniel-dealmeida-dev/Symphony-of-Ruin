@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3dc0b149d25b31f4da2f59e0fb9567c2
+guid: 62f4e1ff84d2ebf4f8c82b56ac9aca7e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6357978219605455805
-    second: Chao_0
+      213: 514260355388862468
+    second: Fundo4 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Chao_0
+      name: Fundo4 1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1280
-        height: 853
+        width: 1344
+        height: 768
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 34c0fbace7ce3c7a0800000000000000
-      internalID: -6357978219605455805
+      spriteID: 400f40d8115032700800000000000000
+      internalID: 514260355388862468
       vertices: []
       indices: 
       edges: []
@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Fundo4 1_0: 514260355388862468
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
