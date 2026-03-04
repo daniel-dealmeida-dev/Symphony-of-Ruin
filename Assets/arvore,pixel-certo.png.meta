@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      arvore,pixel-certo_0: -4288327064157789109
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
