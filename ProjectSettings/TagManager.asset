@@ -41,9 +41,33 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: backgound
+    uniqueID: 2818763623
+    locked: 0
+  - name: Layer1
+    uniqueID: 729313137
+    locked: 0
   - name: arvore
     uniqueID: 3076398565
     locked: 0
+  - name: Inimigos
+    uniqueID: 1239308963
+    locked: 0
+  - name: Protagonista
+    uniqueID: 604132031
+    locked: 0
+  - name: FogoTocha
+    uniqueID: 3837866103
+    locked: 0
+  - name: Tocha
+    uniqueID: 568146017
+    locked: 0
   - name: chao
     uniqueID: 1589543583
+    locked: 0
+  - name: Lua
+    uniqueID: 2657712285
+    locked: 0
+  - name: ArvoreFrente
+    uniqueID: 3236944917
     locked: 0
