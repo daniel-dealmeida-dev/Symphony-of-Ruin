@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3ebe8e407b61ccc4b9e5bc92302359bf
+guid: 2f573015077bdcc4c9a77a8aaf783e7a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6314706765410223347
-    second: upscalemedia-transformed (1)-Photoroom (1)_0
+      213: 6181264090649809868
+    second: ImagemFundo_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: upscalemedia-transformed (1)-Photoroom (1)_0
+      name: ImagemFundo_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1280
-        height: 853
+        width: 1344
+        height: 768
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3f4480da85852a750800000000000000
-      internalID: 6314706765410223347
+      spriteID: cc35f02d0f248c550800000000000000
+      internalID: 6181264090649809868
       vertices: []
       indices: 
       edges: []
@@ -156,8 +156,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      upscalemedia-transformed (1)-Photoroom (1)_0: 6314706765410223347
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
