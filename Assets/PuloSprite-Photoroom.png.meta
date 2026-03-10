@@ -396,7 +396,18 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      PuloSprite-Photoroom_0: 5813464608287040058
+      PuloSprite-Photoroom_1: -116463275524133627
+      PuloSprite-Photoroom_10: 3857005280467137022
+      PuloSprite-Photoroom_2: -7484310342910806915
+      PuloSprite-Photoroom_3: 8045956601805064403
+      PuloSprite-Photoroom_4: -582473391581574706
+      PuloSprite-Photoroom_5: -3126051275158250198
+      PuloSprite-Photoroom_6: 2335052999757022404
+      PuloSprite-Photoroom_7: -3674298535711347469
+      PuloSprite-Photoroom_8: 7565756047276573340
+      PuloSprite-Photoroom_9: -121610843320398138
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
