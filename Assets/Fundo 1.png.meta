@@ -1,10 +1,19 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Fundo 1.png.meta
 guid: 20c15d62caabd194fa038ff4d9068cdc
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 5581491495961432841
     second: Fundo 1_0
+========
+guid: 8cfbd98123cafc84e98b14f61c692254
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6357978219605455805
+    second: Chao_0
+>>>>>>>> origin/branchArtur:Assets/Chao.png.meta
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +135,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
+<<<<<<<< HEAD:Assets/Fundo 1.png.meta
       name: Fundo 1_0
+========
+      name: Chao_0
+>>>>>>>> origin/branchArtur:Assets/Chao.png.meta
       rect:
         serializedVersion: 2
         x: 0
@@ -140,8 +153,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
+<<<<<<<< HEAD:Assets/Fundo 1.png.meta
       spriteID: 90315ad81f0757d40800000000000000
       internalID: 5581491495961432841
+========
+      spriteID: 34c0fbace7ce3c7a0800000000000000
+      internalID: -6357978219605455805
+>>>>>>>> origin/branchArtur:Assets/Chao.png.meta
       vertices: []
       indices: 
       edges: []
@@ -156,8 +174,12 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+<<<<<<<< HEAD:Assets/Fundo 1.png.meta
     nameFileIdTable:
       Fundo 1_0: 5581491495961432841
+========
+    nameFileIdTable: {}
+>>>>>>>> origin/branchArtur:Assets/Chao.png.meta
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

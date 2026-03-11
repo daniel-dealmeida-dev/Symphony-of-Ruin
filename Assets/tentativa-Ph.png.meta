@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
-guid: 62f4e1ff84d2ebf4f8c82b56ac9aca7e
+guid: d578d0be86f1a06419570b14b53fe459
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 514260355388862468
-    second: Fundo4 1_0
-========
-guid: 2f573015077bdcc4c9a77a8aaf783e7a
-TextureImporter:
-  internalIDToNameTable:
+      213: -7384749559079791665
+    second: tentativa-Ph_0
   - first:
-      213: 6181264090649809868
-    second: ImagemFundo_0
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
+      213: -3131215871065772844
+    second: tentativa-Ph_1
+  - first:
+      213: -5385485205114893256
+    second: tentativa-Ph_2
+  - first:
+      213: -4924809675708746854
+    second: tentativa-Ph_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -135,17 +135,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
-      name: Fundo4 1_0
-========
-      name: ImagemFundo_0
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
+      name: tentativa-Ph_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1344
-        height: 768
+        width: 117
+        height: 251
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,13 +149,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
-      spriteID: 400f40d8115032700800000000000000
-      internalID: 514260355388862468
-========
-      spriteID: cc35f02d0f248c550800000000000000
-      internalID: 6181264090649809868
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
+      spriteID: fc393dfe669148990800000000000000
+      internalID: -7384749559079791665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tentativa-Ph_1
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 0
+        width: 142
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dc2f0251cfab84d0800000000000000
+      internalID: -3131215871065772844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tentativa-Ph_2
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 0
+        width: 139
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83c410e4db9e245b0800000000000000
+      internalID: -5385485205114893256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tentativa-Ph_3
+      rect:
+        serializedVersion: 2
+        x: 483
+        y: 0
+        width: 129
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9339f451bf87abb0800000000000000
+      internalID: -4924809675708746854
       vertices: []
       indices: 
       edges: []
@@ -174,12 +228,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
     nameFileIdTable:
-      Fundo4 1_0: 514260355388862468
-========
-    nameFileIdTable: {}
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
+      tentativa-Ph_0: -7384749559079791665
+      tentativa-Ph_1: -3131215871065772844
+      tentativa-Ph_2: -5385485205114893256
+      tentativa-Ph_3: -4924809675708746854
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
