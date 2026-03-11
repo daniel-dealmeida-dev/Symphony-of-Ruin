@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: c7323256937607b44af199793ad2d5aa
+guid: d164366d7ee96c3428ab43d0e74a2876
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2899053561804460533
-    second: Fundo4_0
+      213: 3402291349169967546
+    second: 47917cdc36b12a55da8a784c3960dbad-Photoroom_0
+  - first:
+      213: -5375182646202182935
+    second: 47917cdc36b12a55da8a784c3960dbad-Photoroom_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,22 +129,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Fundo4_0
+      name: OzzyBat_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1344
-        height: 768
+        x: 3
+        y: 268
+        width: 327
+        height: 234
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5f19f28cad18b3820800000000000000
-      internalID: 2899053561804460533
+      spriteID: 55d9e33825dfb8847bc57f1f4ea5048b
+      internalID: 522602932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OzzyBat_1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 11
+        width: 327
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fb5ca27bc954c841a63ab9f4b3eb8c8
+      internalID: 975090286
       vertices: []
       indices: 
       edges: []
@@ -149,7 +173,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 2fc711bfb4387a04c95a622eba0487d9
     internalID: 0
     vertices: []
     indices: 
@@ -157,7 +181,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Fundo4_0: 2899053561804460533
+      OzzyBat_0: 522602932
+      OzzyBat_1: 975090286
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
