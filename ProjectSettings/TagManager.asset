@@ -44,6 +44,9 @@ TagManager:
   - name: backgound
     uniqueID: 2818763623
     locked: 0
+  - name: Lua
+    uniqueID: 2657712285
+    locked: 0
   - name: Layer4
     uniqueID: 502716951
     locked: 0
@@ -73,9 +76,6 @@ TagManager:
     locked: 0
   - name: chao
     uniqueID: 1589543583
-    locked: 0
-  - name: Lua
-    uniqueID: 2657712285
     locked: 0
   - name: ArvoreFrente
     uniqueID: 3236944917
