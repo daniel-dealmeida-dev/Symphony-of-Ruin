@@ -44,6 +44,9 @@ TagManager:
   - name: backgound
     uniqueID: 2818763623
     locked: 0
+  - name: LuzLua
+    uniqueID: 3645821117
+    locked: 0
   - name: Lua
     uniqueID: 2657712285
     locked: 0
@@ -53,14 +56,23 @@ TagManager:
   - name: Layer 3
     uniqueID: 3775296841
     locked: 0
+  - name: Nuvens
+    uniqueID: 2268776795
+    locked: 0
   - name: Layer 2
     uniqueID: 1446784701
     locked: 0
   - name: Layer1
     uniqueID: 729313137
     locked: 0
+  - name: LuzTochaAtrasAvore
+    uniqueID: 3011516201
+    locked: 0
   - name: arvore
     uniqueID: 3076398565
+    locked: 0
+  - name: LuzTochaFrenteArvore
+    uniqueID: 1493307313
     locked: 0
   - name: Inimigos
     uniqueID: 1239308963
@@ -77,9 +89,12 @@ TagManager:
   - name: chao
     uniqueID: 1589543583
     locked: 0
+  - name: Grama
+    uniqueID: 1599809185
+    locked: 0
   - name: ArvoreFrente
     uniqueID: 3236944917
     locked: 0
-  - name: LuzTocha
+  - name: LuzTocha1
     uniqueID: 2900511759
     locked: 0
