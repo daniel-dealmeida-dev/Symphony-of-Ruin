@@ -94,6 +94,8 @@ Esses títulos influenciaram principalmente:
 - **Pixel Art**
 - **Programação Orientada a Objetos**
 - Sistema de gerenciamento de estados do jogador
+- SQlite
+  
 
 ---
 
