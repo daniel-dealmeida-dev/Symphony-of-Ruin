@@ -21,6 +21,23 @@ A proposta é criar uma experiência em que **jogabilidade e música funcionem c
 
 ---
 
+
+## 📌 Escopo do Projeto
+
+A versão atual do projeto foi planejada para conter **três fases principais**, cada uma culminando em um chefe que guarda um grande fragmento da sinfonia.
+
+O desenvolvimento completo do jogo permanece como uma possibilidade futura, porém o escopo definido para o projeto acadêmico contempla:
+
+- 3 áreas 
+- 1 chefe principal
+- sistema de combate
+- sistema de coleta de fragmentos de sinfonia
+- progressão básica do jogador
+
+Esse escopo foi definido para garantir uma **experiência jogável completa**, demonstrando os principais sistemas e conceitos do jogo.
+
+---
+
 ## História
 
 O mundo encontra-se em decadência após uma misteriosa ruptura que corrompeu a **sinfonia que sustentava o equilíbrio de todas as coisas**.
