@@ -24,7 +24,7 @@ A proposta é criar uma experiência em que **jogabilidade e música funcionem c
 
 ## 📌 Escopo do Projeto
 
-A versão atual do projeto foi planejada para conter **três fases principais**, cada uma culminando em um chefe que guarda um grande fragmento da sinfonia.
+A versão atual do projeto foi planejada para conter **três fases principais**, que no fim, culmina em um chefe que guarda um grande fragmento da sinfonia.
 
 O desenvolvimento completo do jogo permanece como uma possibilidade futura, porém o escopo definido para o projeto acadêmico contempla:
 
