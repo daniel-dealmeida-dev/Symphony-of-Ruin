@@ -1,6 +1,6 @@
 # Symphony of Ruin
 
-**Symphony of Ruin** é um jogo 2D em **pixel art** do gênero **metroidvania**, onde a música não é apenas trilha sonora — ela é a força que molda o mundo.
+**Symphony of Ruin** é um jogo 2D em **pixel art** do gênero **metroidvania**, onde a música não é apenas trilha sonora e sim ela é a força que molda o mundo.
 
 O projeto foi desenvolvido como parte do **Projeto Integrador do Curso Técnico Integrado em Informática do Instituto Federal de Santa Catarina (IFSC) – Câmpus Gaspar.**
 
