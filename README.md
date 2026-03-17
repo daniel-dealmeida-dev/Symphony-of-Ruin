@@ -22,7 +22,7 @@ A proposta é criar uma experiência em que **jogabilidade e música funcionem c
 ---
 
 
-## 📌 Escopo do Projeto
+## Escopo do Projeto
 
 A versão atual do projeto foi planejada para conter **três fases principais**, que no fim, culmina em um chefe que guarda um grande fragmento da sinfonia.
 
@@ -60,7 +60,7 @@ Mesmo assim, uma pergunta permanece durante toda a jornada:
 
 ---
 
-## 🎮 Inspirações
+## Inspirações
 
 O projeto se inspira em jogos que combinam **exploração, ambientação sombria e identidade artística forte**:
 
@@ -76,7 +76,7 @@ Esses títulos influenciaram principalmente:
 
 ---
 
-## ⚔️ Mecânicas principais
+## Mecânicas principais
 
 - Exploração
 - Combate utilizando a **guitarra como arma principal**
@@ -88,7 +88,7 @@ Esses títulos influenciaram principalmente:
 
 ---
 
-## 🛠 Tecnologias utilizadas
+## Tecnologias utilizadas
 
 - **Unity 2023**
 - **Pixel Art**
@@ -99,7 +99,7 @@ Esses títulos influenciaram principalmente:
 
 ---
 
-## 👨‍💻 Desenvolvedores
+## Desenvolvedores
 
 - Artur Kremer Theiss  
 - Daniel de Almeida  
