@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MatoNovo_0: -568077866955714566
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

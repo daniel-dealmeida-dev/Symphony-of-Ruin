@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BlocoTerraEstilo1 1_0: 6855181708435589455
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
