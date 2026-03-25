@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PrimeiraFase.unity
     guid: 8bf511a00cb984042acab8843d5edfe2
+  - enabled: 1
+    path: Assets/Scenes/TelaCarregamento.unity
+    guid: 7535ce317a80d0b4498c1fec2a4f7316
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
