@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ee6d118e29b86a04bbc1de789c819cee
+guid: e1445ba740cf5ea49b0e412941ab5708
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8975782331931574122
-    second: Plataforma_0
+      213: -7132503201101505679
+    second: LuaFase1-Photoroom_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Plataforma_0
+      name: LuaFase1-Photoroom_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 640
-        height: 131
+        x: 57
+        y: 432
+        width: 171
+        height: 162
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 690cdfb568d9f6380800000000000000
-      internalID: -8975782331931574122
+      spriteID: 17b1203d022440d90800000000000000
+      internalID: -7132503201101505679
       vertices: []
       indices: 
       edges: []
@@ -156,8 +156,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Plataforma_0: -8975782331931574122
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
