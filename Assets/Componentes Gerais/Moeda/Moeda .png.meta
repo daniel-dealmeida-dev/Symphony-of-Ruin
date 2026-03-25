@@ -324,7 +324,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Moeda _0: -756814735627698355
+      Moeda _1: -3973664221583471466
+      Moeda _2: -4389435160265752528
+      Moeda _3: 2296153964504588471
+      Moeda _4: -3760438083020760018
+      Moeda _5: -6779680697463894155
+      Moeda _6: -4600697291727317008
+      Moeda _7: 3319603686158041181
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

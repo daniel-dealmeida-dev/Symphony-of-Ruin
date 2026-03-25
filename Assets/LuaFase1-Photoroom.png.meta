@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      LuaFase1-Photoroom_0: -7132503201101505679
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
