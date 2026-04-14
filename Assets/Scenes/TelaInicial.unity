@@ -290,7 +290,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 23.432137
+  field of view: 55.298225
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -352,9 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8188a9e49157f49bbe8cf923ad7f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vidas: 0
-  volumeMusica: 100
-  fasesConcluidas: []
+  bootstrapOnAwake: 1
 --- !u!4 &1981359475
 Transform:
   m_ObjectHideFlags: 0
@@ -364,8 +362,8 @@ Transform:
   m_GameObject: {fileID: 1981359473}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -87.73373, y: -9.967767, z: -10.573451}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -110.5043, y: -123.023865, z: -10.573451}
+  m_LocalScale: {x: 0.955, y: 0.6763, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -641,7 +639,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 673.01, y: -159.62}
+  m_AnchoredPosition: {x: 670, y: -159.62}
   m_SizeDelta: {x: 686.8771, y: 237.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1157727393596443736
@@ -1598,6 +1596,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6e23445bbc338f4e80b6756f54fad56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  newGameSceneName: PrimeiraFase
+  fallbackLoadSceneName: PrimeiraFase
+  mainMenuRoot: {fileID: 0}
 --- !u!114 &9120040496087476175
 MonoBehaviour:
   m_ObjectHideFlags: 0

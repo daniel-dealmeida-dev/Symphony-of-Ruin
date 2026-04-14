@@ -1,50 +1,88 @@
-﻿using UnityEngine;
-using System.Collections;
+using UnityEngine;
 
-public class Tiro : MonoBehaviour {
+public class Tiro : MonoBehaviour
+{
+    [SerializeField] private GameObject projetil;
+    [SerializeField] private float forca = 12f;
+    [SerializeField] private AudioClip shootSFX;
+    [SerializeField] private float projectileSpawnOffset = 0.8f;
+    [SerializeField] private int projectileDamage = 1;
 
-	// Referência ao projétil para atirar
-	public GameObject projetil;
-	public float forca = 10.0f;
-	
-	// Referência ao efeito sonoro de tiro
-	public AudioClip shootSFX;
-	
-	// Update é chamado uma vez por frame
-	void Update () {
-		// Detecta se o botão de tiro foi pressionado
-		if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Jump"))
-		{	
-			// se o projetil foi definido
-			if (projetil)
-			{
-				// Instancia o projetil na posição da camera + 1 metro a frente com a rotação da camera
-				GameObject newProjectile = Instantiate(projetil, transform.position + transform.forward, transform.rotation) as GameObject;
+    private void Awake()
+    {
+        GameServices.EnsureInstance();
+    }
 
-				// Se o projetil não tiver um Rigidbody, adicione um
-				if (!newProjectile.GetComponent<Rigidbody>()) 
-				{
-					newProjectile.AddComponent<Rigidbody>();
-				}
+    private void Update()
+    {
+        bool firePressed = GameServices.Instance.Settings.GetButtonDown(GameAction.Fire) ||
+                           GameServices.Instance.Settings.GetButtonDown(GameAction.Jump);
 
-				// Aplique força ao Rigidbody do newProjectile
-				newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * forca, ForceMode.VelocityChange);
-				
-				// toque o efeito sonoro, se houver
-				if (shootSFX)
-				{
-					if (newProjectile.GetComponent<AudioSource> ()) { 
-						// se o projetil tiver um componente AudioSource
-						// toca o efeito sonoro através deste componente AudioSource.
-						// nota: O audio irá viajar com o gameobject.
-						newProjectile.GetComponent<AudioSource> ().PlayOneShot (shootSFX);
-					} else {
-						// dinamicamente cria um novo gameObject com um AudioSource
-						// que se auto-destroi quando o audio termina
-						AudioSource.PlayClipAtPoint (shootSFX, newProjectile.transform.position);
-					}
-				}
-			}
-		}
-	}
+        if (!firePressed || projetil == null)
+        {
+            if (!firePressed)
+            {
+                return;
+            }
+        }
+
+        Vector2 direction = transform.localScale.x >= 0f ? Vector2.right : Vector2.left;
+        Vector3 spawnPosition = transform.position + new Vector3(direction.x * projectileSpawnOffset, 0.25f, 0f);
+        GameObject newProjectile = projetil != null
+            ? Instantiate(projetil, spawnPosition, Quaternion.identity)
+            : CreateFallbackProjectile(spawnPosition);
+
+        var projectile2D = newProjectile.GetComponent<Projectile2D>();
+        if (projectile2D == null)
+        {
+            projectile2D = newProjectile.AddComponent<Projectile2D>();
+        }
+
+        projectile2D.Launch(direction, forca, projectileDamage);
+
+        if (!newProjectile.TryGetComponent(out CircleCollider2D circleCollider))
+        {
+            circleCollider = newProjectile.AddComponent<CircleCollider2D>();
+        }
+
+        circleCollider.isTrigger = true;
+
+        if (!newProjectile.TryGetComponent(out Rigidbody2D projectileRigidbody))
+        {
+            projectileRigidbody = newProjectile.AddComponent<Rigidbody2D>();
+        }
+
+        projectileRigidbody.gravityScale = 0f;
+        projectileRigidbody.isKinematic = true;
+
+        if (shootSFX == null)
+        {
+            return;
+        }
+
+        if (!newProjectile.TryGetComponent(out AudioSource source))
+        {
+            source = newProjectile.AddComponent<AudioSource>();
+        }
+
+        var managed = newProjectile.GetComponent<ManagedAudioSource>();
+        if (managed == null)
+        {
+            managed = newProjectile.AddComponent<ManagedAudioSource>();
+        }
+
+        managed.Bus = AudioBus.Sfx;
+        source.PlayOneShot(shootSFX);
+    }
+
+    private static GameObject CreateFallbackProjectile(Vector3 spawnPosition)
+    {
+        var projectileObject = new GameObject("Projetil");
+        projectileObject.transform.position = spawnPosition;
+        var spriteRenderer = projectileObject.AddComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(1f, 0.83f, 0.4f, 1f);
+        projectileObject.tag = "Projetil";
+        projectileObject.transform.localScale = new Vector3(0.18f, 0.18f, 1f);
+        return projectileObject;
+    }
 }

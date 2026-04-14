@@ -1,38 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Video;
 
 public class MovimentoJogador : MonoBehaviour
 {
+    [SerializeField] private float velocidade = 10f;
+    [SerializeField] private Rigidbody2D corpoRigido;
 
-    public int velocidade = 10;
     private float moveX;
     private bool direita = true;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        GameServices.EnsureInstance();
+        if (GameManager.gm == null)
+        {
+            new GameObject("GameManager").AddComponent<GameManager>();
+        }
 
+        if (corpoRigido == null)
+        {
+            corpoRigido = GetComponent<Rigidbody2D>();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        moveJogador();
+        MoveJogador();
     }
 
     private void LateUpdate()
     {
-        viraJogador();
+        ViraJogador();
     }
 
-    void moveJogador()
+    private void MoveJogador()
     {
-        moveX = Input.GetAxis("Horizontal");
-        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * velocidade, gameObject.GetComponent<Rigidbody2D>().velocity.y);
+        moveX = GameServices.Instance.Settings.GetHorizontal();
+        if (corpoRigido != null)
+        {
+            corpoRigido.velocity = new Vector2(moveX * velocidade, corpoRigido.velocity.y);
+        }
     }
-    void viraJogador()
+
+    private void ViraJogador()
     {
         if (moveX > 0)
         {
@@ -44,12 +53,10 @@ public class MovimentoJogador : MonoBehaviour
         }
 
         Vector2 escala = transform.localScale;
-        if ((escala.x > 0 && !direita) || (escala.x < 0) && direita)
+        if ((escala.x > 0 && !direita) || (escala.x < 0 && direita))
         {
-            escala.x = escala.x * -1;
+            escala.x *= -1;
             transform.localScale = escala;
-
-
         }
     }
 }
