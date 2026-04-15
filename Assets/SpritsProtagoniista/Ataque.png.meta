@@ -1,40 +1,31 @@
 fileFormatVersion: 2
-guid: 3517b3314f70e27449f9b2b2ae1a0920
+guid: 94f5e9cfa2bc3424eb68895c26ce05d2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5813464608287040058
-    second: PuloSprite-Photoroom_0
+      213: 3944048365188708787
+    second: ataquePrincipalP_0
   - first:
-      213: -116463275524133627
-    second: PuloSprite-Photoroom_1
+      213: 4919607273891826748
+    second: ataquePrincipalP_1
   - first:
-      213: -7484310342910806915
-    second: PuloSprite-Photoroom_2
+      213: -2349994226937969743
+    second: ataquePrincipalP_2
   - first:
-      213: 8045956601805064403
-    second: PuloSprite-Photoroom_3
+      213: 3191031427841531116
+    second: ataquePrincipalP_3
   - first:
-      213: -582473391581574706
-    second: PuloSprite-Photoroom_4
+      213: -2010458259564232861
+    second: ataquePrincipalP_4
   - first:
-      213: -3126051275158250198
-    second: PuloSprite-Photoroom_5
+      213: 5684673359198863807
+    second: ataquePrincipalP_5
   - first:
-      213: 2335052999757022404
-    second: PuloSprite-Photoroom_6
+      213: -9091381914389901774
+    second: ataquePrincipalP_6
   - first:
-      213: -3674298535711347469
-    second: PuloSprite-Photoroom_7
-  - first:
-      213: 7565756047276573340
-    second: PuloSprite-Photoroom_8
-  - first:
-      213: -121610843320398138
-    second: PuloSprite-Photoroom_9
-  - first:
-      213: 3857005280467137022
-    second: PuloSprite-Photoroom_10
+      213: -2061335677211353441
+    second: ataquePrincipalP_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -156,232 +147,169 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_0
+      name: ataquePrincipalP1
       rect:
         serializedVersion: 2
-        x: 6
-        y: 14
-        width: 103
-        height: 175
+        x: 0
+        y: 681
+        width: 335
+        height: 343
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a32214b92439da050800000000000000
-      internalID: 5813464608287040058
+      spriteID: 3b9780877131cb630800000000000000
+      internalID: 3944048365188708787
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_1
+      name: ataquePrincipalP2
       rect:
         serializedVersion: 2
-        x: 116
-        y: 14
-        width: 115
-        height: 192
+        x: 347
+        y: 681
+        width: 313
+        height: 321
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 50d6109944d326ef0800000000000000
-      internalID: -116463275524133627
+      spriteID: c3c00ca10c4f54440800000000000000
+      internalID: 4919607273891826748
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_2
+      name: ataquePrincipalP3
       rect:
         serializedVersion: 2
-        x: 239
-        y: 29
-        width: 106
-        height: 201
+        x: 705
+        y: 681
+        width: 319
+        height: 343
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d74f40e8563622890800000000000000
-      internalID: -7484310342910806915
+      spriteID: 1b3c42f83b4236fd0800000000000000
+      internalID: -2349994226937969743
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_3
+      name: ataquePrincipalP4
       rect:
         serializedVersion: 2
-        x: 356
-        y: 42
-        width: 103
-        height: 203
+        x: 23
+        y: 339
+        width: 372
+        height: 304
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3d8ccc866eaf8af60800000000000000
-      internalID: 8045956601805064403
+      spriteID: cec1a934d22d84c20800000000000000
+      internalID: 3191031427841531116
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_4
+      name: ataquePrincipalP5
       rect:
         serializedVersion: 2
-        x: 466
-        y: 56
-        width: 109
-        height: 207
+        x: 395
+        y: 341
+        width: 301
+        height: 280
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ec9c9a35983aae7f0800000000000000
-      internalID: -582473391581574706
+      spriteID: 36f7ce26dda6914e0800000000000000
+      internalID: -2010458259564232861
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_5
+      name: ataquePrincipalP6
       rect:
         serializedVersion: 2
-        x: 593
-        y: 47
-        width: 100
-        height: 213
+        x: 705
+        y: 339
+        width: 262
+        height: 338
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a2d19828de80e94d0800000000000000
-      internalID: -3126051275158250198
+      spriteID: fb1cc2f2d4404ee40800000000000000
+      internalID: 5684673359198863807
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_6
+      name: ataquePrincipalP7
       rect:
         serializedVersion: 2
-        x: 707
-        y: 44
-        width: 106
-        height: 198
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4c44a36e456c76020800000000000000
-      internalID: 2335052999757022404
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PuloSprite-Photoroom_7
-      rect:
-        serializedVersion: 2
-        x: 826
-        y: 21
-        width: 97
-        height: 188
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3fcef24f2f4420dc0800000000000000
-      internalID: -3674298535711347469
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PuloSprite-Photoroom_8
-      rect:
-        serializedVersion: 2
-        x: 946
+        x: 14
         y: 0
-        width: 100
-        height: 167
+        width: 253
+        height: 310
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c920f273a07fef860800000000000000
-      internalID: 7565756047276573340
+      spriteID: 23e016b215ce4d180800000000000000
+      internalID: -9091381914389901774
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PuloSprite-Photoroom_9
+      name: ataquePrincipalP9
       rect:
         serializedVersion: 2
-        x: 1059
+        x: 731
         y: 0
-        width: 100
-        height: 167
+        width: 287
+        height: 302
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6ce4d031593ff4ef0800000000000000
-      internalID: -121610843320398138
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PuloSprite-Photoroom_10
-      rect:
-        serializedVersion: 2
-        x: 1175
-        y: 0
-        width: 98
-        height: 206
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ef1bc070ed5d68530800000000000000
-      internalID: 3857005280467137022
+      spriteID: f9e5afc7f1aa463e0800000000000000
+      internalID: -2061335677211353441
       vertices: []
       indices: 
       edges: []
@@ -389,7 +317,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: bbc6562205e689849ae7a149fc3cb9a4
     internalID: 0
     vertices: []
     indices: 
@@ -397,17 +325,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      PuloSprite-Photoroom_0: 5813464608287040058
-      PuloSprite-Photoroom_1: -116463275524133627
-      PuloSprite-Photoroom_10: 3857005280467137022
-      PuloSprite-Photoroom_2: -7484310342910806915
-      PuloSprite-Photoroom_3: 8045956601805064403
-      PuloSprite-Photoroom_4: -582473391581574706
-      PuloSprite-Photoroom_5: -3126051275158250198
-      PuloSprite-Photoroom_6: 2335052999757022404
-      PuloSprite-Photoroom_7: -3674298535711347469
-      PuloSprite-Photoroom_8: 7565756047276573340
-      PuloSprite-Photoroom_9: -121610843320398138
+      ataquePrincipalP1: 3944048365188708787
+      ataquePrincipalP2: 4919607273891826748
+      ataquePrincipalP3: -2349994226937969743
+      ataquePrincipalP4: 3191031427841531116
+      ataquePrincipalP5: -2010458259564232861
+      ataquePrincipalP6: 5684673359198863807
+      ataquePrincipalP7: -9091381914389901774
+      ataquePrincipalP9: -2061335677211353441
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
