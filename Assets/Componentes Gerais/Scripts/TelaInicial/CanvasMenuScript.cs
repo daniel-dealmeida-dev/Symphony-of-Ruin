@@ -12,28 +12,15 @@ public class CanvasMenuScript : MonoBehaviour
     [Header("Optional References")]
     [SerializeField] private GameObject mainMenuRoot;
 
-    private SettingsPanelController settingsController;
     private Transform runtimeMenuRoot;
     private Text statusLabel;
 
     private void Awake()
     {
-        GameServices.EnsureInstance();
-        ResponsiveCanvasUtility.ConfigureAllCanvases();
-        EnsureEventSystem();
-        ResolveReferences();
-        HideBrokenSceneUi();
-        BuildCleanRuntimeMenu();
-        EnsureSettingsCanvas();
-        ShowMainMenu();
     }
 
     private void Update()
     {
-        if (settingsController != null && settingsController.IsVisible && GameServices.Instance.Settings.GetButtonDown(GameAction.Cancel))
-        {
-            ShowMainMenu();
-        }
     }
 
     public void ChangeScene(string sceneName)
@@ -73,15 +60,10 @@ public class CanvasMenuScript : MonoBehaviour
         }
 
         EnsureSettingsCanvas();
-        settingsController.Show("Configuracoes", ShowMainMenu);
     }
 
     public void ShowMainMenu()
     {
-        if (settingsController != null)
-        {
-            settingsController.Hide();
-        }
 
         if (runtimeMenuRoot != null)
         {
@@ -216,13 +198,7 @@ public class CanvasMenuScript : MonoBehaviour
 
     private void EnsureSettingsCanvas()
     {
-        if (settingsController != null)
-        {
-            return;
-        }
 
-        settingsController = SettingsPanelController.CreateOrGet("SettingsCanvasMenu");
-        settingsController.Hide();
     }
 
     private void UpdateSaveStatus(string customMessage = null)

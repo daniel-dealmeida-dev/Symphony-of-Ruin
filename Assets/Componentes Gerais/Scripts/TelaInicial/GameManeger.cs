@@ -46,10 +46,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (settingsPanelController != null && settingsPanelController.IsVisible)
-        {
-            return;
-        }
 
         bool pausePressed = GameServices.Instance.Settings.GetButton(GameAction.Pause);
         if (!pausePressed)
@@ -86,11 +82,6 @@ public class GameManager : MonoBehaviour
     {
         jogoPausado = false;
         Time.timeScale = 1f;
-
-        if (settingsPanelController != null)
-        {
-            settingsPanelController.Hide();
-        }
 
         if (painelPause != null)
         {
@@ -241,13 +232,6 @@ public class GameManager : MonoBehaviour
     {
         EnsureSettingsCanvas();
         painelPause.SetActive(false);
-        settingsPanelController.Show("Configuracoes", () =>
-        {
-            if (painelPause != null)
-            {
-                painelPause.SetActive(true);
-            }
-        });
     }
 
     private void ReturnToMainMenu()
@@ -297,9 +281,6 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-
-        settingsPanelController = SettingsPanelController.CreateOrGet("SettingsCanvasGameplay");
-        settingsPanelController.Hide();
     }
 
     private static GameObject CreatePanel(Transform parent, string name, Color color)

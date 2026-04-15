@@ -12,7 +12,7 @@ public class EnemyPresentation2D : MonoBehaviour
     private bool moving;
     private Coroutine attackRoutine;
 
-    private void Awake()
+    private void Start()
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
