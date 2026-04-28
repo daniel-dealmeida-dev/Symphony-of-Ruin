@@ -1,19 +1,25 @@
 fileFormatVersion: 2
-guid: d578d0be86f1a06419570b14b53fe459
+guid: 413f765136af3d144b650aff082c891b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7384749559079791665
-    second: tentativa-Ph_0
+      213: 276861877969765637
+    second: ProtagonistaDerrotado-P_0
   - first:
-      213: -3131215871065772844
-    second: tentativa-Ph_1
+      213: 439021141071053780
+    second: ProtagonistaDerrotado-P_1
   - first:
-      213: -5385485205114893256
-    second: tentativa-Ph_2
+      213: 1831645173357633568
+    second: ProtagonistaDerrotado-P_2
   - first:
-      213: -4924809675708746854
-    second: tentativa-Ph_3
+      213: -8691625520743839896
+    second: ProtagonistaDerrotado-P_3
+  - first:
+      213: 4372091143411728606
+    second: ProtagonistaDerrotado-P_4
+  - first:
+      213: 649281783989094329
+    second: ProtagonistaDerrotado-P_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -135,13 +141,76 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tentativa-Ph_0
+      name: ProtagonistaDerrotado-P_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 681
+        width: 344
+        height: 343
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5054c30496c97d300800000000000000
+      internalID: 276861877969765637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ProtagonistaDerrotado-P_1
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 681
+        width: 304
+        height: 278
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d34d6ad667b71600800000000000000
+      internalID: 439021141071053780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ProtagonistaDerrotado-P_2
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 655
+        width: 369
+        height: 369
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0206a88a49f4b6910800000000000000
+      internalID: 1831645173357633568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ProtagonistaDerrotado-P_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 117
-        height: 251
+        width: 259
+        height: 643
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -149,20 +218,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fc393dfe669148990800000000000000
-      internalID: -7384749559079791665
+      spriteID: 867085b93a4216780800000000000000
+      internalID: -8691625520743839896
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tentativa-Ph_1
+      name: ProtagonistaDerrotado-P_4
       rect:
         serializedVersion: 2
-        x: 143
-        y: 0
-        width: 142
-        height: 251
+        x: 390
+        y: 339
+        width: 304
+        height: 278
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -170,20 +239,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4dc2f0251cfab84d0800000000000000
-      internalID: -3131215871065772844
+      spriteID: ed000b80bb9ccac30800000000000000
+      internalID: 4372091143411728606
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tentativa-Ph_2
+      name: ProtagonistaDerrotado-P_5
       rect:
         serializedVersion: 2
-        x: 312
-        y: 0
-        width: 139
-        height: 251
+        x: 646
+        y: 339
+        width: 355
+        height: 108
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,29 +260,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 83c410e4db9e245b0800000000000000
-      internalID: -5385485205114893256
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tentativa-Ph_3
-      rect:
-        serializedVersion: 2
-        x: 483
-        y: 0
-        width: 129
-        height: 251
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a9339f451bf87abb0800000000000000
-      internalID: -4924809675708746854
+      spriteID: 9b74dcda756b20900800000000000000
+      internalID: 649281783989094329
       vertices: []
       indices: 
       edges: []
@@ -228,11 +276,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      tentativa-Ph_0: -7384749559079791665
-      tentativa-Ph_1: -3131215871065772844
-      tentativa-Ph_2: -5385485205114893256
-      tentativa-Ph_3: -4924809675708746854
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
