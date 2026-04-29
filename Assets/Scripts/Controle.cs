@@ -9,16 +9,37 @@ public class Controle : MonoBehaviour
     public int forcaDoPulo = 1250;
     public Transform terra;
     public LayerMask chao;
+    public FixedJoystick joystick;
+    [SerializeField, Range(0f, 1f)] private float joystickDeadZone = 0.15f;
+    [SerializeField, Range(0f, 1f)] private float joystickJumpThreshold = 0.65f;
 
     private float moveX;
     private bool direita = true;
     private bool noChao;
+    private bool joystickJumpHeld;
     private Animator animator;
+    private Rigidbody2D corpo;
+    private MobileJoystick mobileJoystick;
 
     // Use this for initialization
     void Start()
     {
         animator = gameObject.GetComponent<Animator>();
+        corpo = gameObject.GetComponent<Rigidbody2D>();
+
+        if (joystick == null)
+        {
+            joystick = FindFirstObjectByType<FixedJoystick>(FindObjectsInactive.Include);
+        }
+
+        if (joystick == null)
+        {
+            mobileJoystick = MobileJoystick.EnsureInScene();
+        }
+        else
+        {
+            mobileJoystick = FindFirstObjectByType<MobileJoystick>(FindObjectsInactive.Include);
+        }
     }
 
     // Update is called once per frame
@@ -35,23 +56,22 @@ public class Controle : MonoBehaviour
     void moveJogador()
     {
         // CONTROLES
-        moveX = Input.GetAxis("Horizontal");
+        moveX = pegaMovimentoHorizontal();
         noChao = Physics2D.Linecast(transform.position, terra.position, chao);
         if (Input.GetButtonDown("Fire1"))
         {
             ataca();
         }
-        if (Input.GetButtonDown("Jump") && noChao)
+        if ((Input.GetButtonDown("Jump") || joystickPediuPulo()) && noChao)
         {
             pula();
         }
 
         // FÍSICA
-        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * velocidade,
-                                                                      gameObject.GetComponent<Rigidbody2D>().velocity.y);
+        corpo.velocity = new Vector2(moveX * velocidade, corpo.velocity.y);
 
         Physics2D.IgnoreLayerCollision(this.gameObject.layer, LayerMask.NameToLayer("chao"),
-                                       (gameObject.GetComponent<Rigidbody2D>().velocity.y > 0.0f));
+                                       (corpo.velocity.y > 0.0f));
 
         // ANIMAÇAO
         animator.SetBool("NoChao", noChao);
@@ -66,12 +86,55 @@ public class Controle : MonoBehaviour
         }
     }
 
+    float pegaMovimentoHorizontal()
+    {
+        float entradaJoystick = 0f;
+
+        if (joystick != null)
+        {
+            entradaJoystick = joystick.Horizontal;
+        }
+
+        if (Mathf.Abs(entradaJoystick) < joystickDeadZone && mobileJoystick != null)
+        {
+            entradaJoystick = mobileJoystick.Horizontal;
+        }
+
+        if (Mathf.Abs(entradaJoystick) >= joystickDeadZone)
+        {
+            return entradaJoystick;
+        }
+
+        return Input.GetAxis("Horizontal");
+    }
+
+    bool joystickPediuPulo()
+    {
+        float vertical = 0f;
+
+        if (joystick != null)
+        {
+            vertical = joystick.Vertical;
+        }
+
+        if (Mathf.Abs(vertical) < joystickDeadZone && mobileJoystick != null)
+        {
+            vertical = mobileJoystick.Vertical;
+        }
+
+        bool pressionandoParaCima = vertical >= joystickJumpThreshold;
+        bool pediuPulo = pressionandoParaCima && !joystickJumpHeld;
+        joystickJumpHeld = pressionandoParaCima;
+
+        return pediuPulo;
+    }
+
     void ataca(){
         animator.SetTrigger("Ataque");
     }
 
     void pula(){
-        GetComponent<Rigidbody2D>().AddForce(Vector2.up * forcaDoPulo);
+        corpo.AddForce(Vector2.up * forcaDoPulo);
     }
 
     void viraJogador()
