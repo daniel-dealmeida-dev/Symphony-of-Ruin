@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
 guid: 62f4e1ff84d2ebf4f8c82b56ac9aca7e
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 514260355388862468
     second: Fundo4 1_0
-========
-guid: 2f573015077bdcc4c9a77a8aaf783e7a
-TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 6181264090649809868
-    second: ImagemFundo_0
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -135,11 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
       name: Fundo4 1_0
-========
-      name: ImagemFundo_0
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
       rect:
         serializedVersion: 2
         x: 0
@@ -153,13 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
       spriteID: 400f40d8115032700800000000000000
       internalID: 514260355388862468
-========
-      spriteID: cc35f02d0f248c550800000000000000
-      internalID: 6181264090649809868
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
       vertices: []
       indices: 
       edges: []
@@ -174,12 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-<<<<<<<< HEAD:Assets/Fundo4 1.png.meta
     nameFileIdTable:
       Fundo4 1_0: 514260355388862468
-========
-    nameFileIdTable: {}
->>>>>>>> origin/branchArtur:Assets/ImagemFundo.png.meta
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

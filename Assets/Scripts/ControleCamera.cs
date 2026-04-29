@@ -18,6 +18,20 @@ public class ControleCamera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
+		if (jogador == null)
+		{
+			PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+			if (playerHealth != null)
+			{
+				jogador = playerHealth.gameObject;
+			}
+		}
+
+		if (jogador == null)
+		{
+			return;
+		}
+
 		float x = Mathf.Clamp (jogador.transform.position.x, xMin, xMax);
 		float y = Mathf.Clamp (jogador.transform.position.y, yMin, yMax);
 		gameObject.transform.position = new Vector3 (x, y, gameObject.transform.position.z);

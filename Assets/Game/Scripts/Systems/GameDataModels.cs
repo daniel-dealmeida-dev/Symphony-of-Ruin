@@ -14,7 +14,7 @@ public class AudioSettingsData
 public class ProgressData
 {
     public string lastScene = "TelaInicial";
-    public int lives = 3;
+    public int lives = GameplayBalance.PlayerInitialHealth;
     public int coinsCollected = 0;
     public bool hasSave = false;
     public float playerPositionX = 0f;

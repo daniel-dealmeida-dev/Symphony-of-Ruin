@@ -33,16 +33,21 @@ public class IAInimigoRonda : MonoBehaviour {
 
 	// Inicialização
 	void Start () {
+		if (inimigo == null)
+		{
+			inimigo = gameObject;
+		}
+
 		transform = inimigo.transform;
 		proxTempo = 0f;
 		seMovendo = true;
 		animator = inimigo.GetComponent<Animator> ();
 		//espada.enabled = false;
-		saude = gameObject.GetComponent<Saude> ();
+		saude = inimigo.GetComponent<Saude> ();
 	}
 
 	void Update () {
-        if (!saude.morto)
+        if (saude == null || !saude.morto)
         {
             if (Time.time >= proxTempo)
             {
@@ -68,14 +73,20 @@ public class IAInimigoRonda : MonoBehaviour {
 			transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * Time.deltaTime);
 
 			//animação
-			animator.SetBool("Andando",true);
+			if (animator != null)
+			{
+				animator.SetBool("Andando", true);
+			}
 
 			// Se o inimigo chegou no desrino, espera
             if(Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1) {
 				i++;
 				proxTempo = Time.time + espera;
 				seMovendo = false;
-				animator.SetBool("Andando",false);
+				if (animator != null)
+				{
+					animator.SetBool("Andando", false);
+				}
 			}
 
 			// i volta para 0 se passou do limite ou paramos de nos mover se não há loop
@@ -98,7 +109,7 @@ public class IAInimigoRonda : MonoBehaviour {
 
     public void ataca()
     {
-        if (!atacando)
+        if (!atacando && animator != null)
         {
             animator.SetTrigger("Ataque");
         }

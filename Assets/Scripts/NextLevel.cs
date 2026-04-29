@@ -12,4 +12,18 @@ public class NextLevel : MonoBehaviour {
 			GameManager.gm.NextLevel();
 		}
 	}
+
+	void OnCollisionEnter2D(Collision2D newCollision)
+	{
+		if (newCollision.gameObject.CompareTag("Projetil") && GameManager.gm != null) {
+			GameManager.gm.NextLevel();
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.CompareTag("Player") && GameManager.gm != null) {
+			GameManager.gm.NextLevel();
+		}
+	}
 }

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Projetil
+  - Inimigos
   layers:
   - Default
   - TransparentFX
@@ -12,17 +13,17 @@ TagManager:
   - fundo
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - Platforms
+  - Collision
   - chao
-  - 
+  - Decorations
   - Lobo
-  - 
-  - 
-  - 
-  - 
+  - Foreground
+  - Interactables
+  - PlayerSpawn
+  - EnemySpawn
   - 
   - 
   - 
@@ -72,17 +73,14 @@ TagManager:
   - name: arvore
     uniqueID: 3076398565
     locked: 0
+  - name: chao
+    uniqueID: 1589543583
+    locked: 0
+  - name: Grama
+    uniqueID: 1599809185
+    locked: 0
   - name: LuzTochaFrenteArvore
     uniqueID: 1493307313
-    locked: 0
-  - name: Inimigos
-    uniqueID: 1239308963
-    locked: 0
-  - name: Protagonista
-    uniqueID: 604132031
-    locked: 0
-  - name: Lobo
-    uniqueID: 2514540167
     locked: 0
   - name: FogoTocha
     uniqueID: 3837866103
@@ -90,11 +88,14 @@ TagManager:
   - name: Tocha
     uniqueID: 568146017
     locked: 0
-  - name: chao
-    uniqueID: 1589543583
+  - name: Inimigos
+    uniqueID: 1239308963
     locked: 0
-  - name: Grama
-    uniqueID: 1599809185
+  - name: Lobo
+    uniqueID: 2514540167
+    locked: 0
+  - name: Protagonista
+    uniqueID: 604132031
     locked: 0
   - name: ArvoreFrente
     uniqueID: 3236944917

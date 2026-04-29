@@ -19,6 +19,7 @@ public class MouseLooker : MonoBehaviour {
 	private Transform cameraTransform;
 
 	void Start() {
+		GameServices.EnsureInstance();
 		// start the game with the cursor locked
 		LockCursor (true);
 
@@ -38,12 +39,14 @@ public class MouseLooker : MonoBehaviour {
 		LookRotation ();
 
 		// if ESCAPE key is pressed, then unlock the cursor
-		if(Input.GetButtonDown("Cancel")){
+		bool cancelPressed = GameServices.Instance.Settings.GetButtonDown(GameAction.Cancel);
+		bool firePressed = GameServices.Instance.Settings.GetButtonDown(GameAction.Fire);
+		if(cancelPressed){
 			LockCursor (false);
 		}
 
 		// if the player fires, then relock the cursor
-		if(Input.GetButtonDown("Fire1")){
+		if(firePressed){
 			LockCursor (true);
 		}
 	}

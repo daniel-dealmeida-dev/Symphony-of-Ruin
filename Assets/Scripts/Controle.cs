@@ -14,11 +14,14 @@ public class Controle : MonoBehaviour
     private bool direita = true;
     private bool noChao;
     private Animator animator;
+    private Rigidbody2D corpoRigido;
 
     // Use this for initialization
     void Start()
     {
+        GameServices.EnsureInstance();
         animator = gameObject.GetComponent<Animator>();
+        corpoRigido = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -35,25 +38,37 @@ public class Controle : MonoBehaviour
     void moveJogador()
     {
         // CONTROLES
-        moveX = Input.GetAxis("Horizontal");
-        noChao = Physics2D.Linecast(transform.position, terra.position, chao);
-        if (Input.GetButtonDown("Fire1"))
+        moveX = GameServices.Instance.Settings.GetHorizontal();
+        noChao = terra != null && Physics2D.Linecast(transform.position, terra.position, chao);
+        bool ataquePressionado = GameServices.Instance.Settings.GetButtonDown(GameAction.Fire);
+        bool puloPressionado = GameServices.Instance.Settings.GetButtonDown(GameAction.Jump);
+        if (ataquePressionado)
         {
             ataca();
         }
-        if (Input.GetButtonDown("Jump") && noChao)
+        if (puloPressionado && noChao)
         {
             pula();
         }
 
         // FÍSICA
-        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * velocidade,
-                                                                      gameObject.GetComponent<Rigidbody2D>().velocity.y);
+        if (corpoRigido != null)
+        {
+            corpoRigido.velocity = new Vector2(moveX * velocidade, corpoRigido.velocity.y);
+        }
 
-        Physics2D.IgnoreLayerCollision(this.gameObject.layer, LayerMask.NameToLayer("chao"),
-                                       (gameObject.GetComponent<Rigidbody2D>().velocity.y > 0.0f));
+        int camadaChao = LayerMask.NameToLayer("chao");
+        if (camadaChao >= 0 && corpoRigido != null)
+        {
+            Physics2D.IgnoreLayerCollision(this.gameObject.layer, camadaChao, corpoRigido.velocity.y > 0.0f);
+        }
 
         // ANIMAÇAO
+        if (animator == null)
+        {
+            return;
+        }
+
         animator.SetBool("NoChao", noChao);
 
         if (moveX != 0)
@@ -67,11 +82,17 @@ public class Controle : MonoBehaviour
     }
 
     void ataca(){
-        animator.SetTrigger("Ataque");
+        if (animator != null)
+        {
+            animator.SetTrigger("Ataque");
+        }
     }
 
     void pula(){
-        GetComponent<Rigidbody2D>().AddForce(Vector2.up * forcaDoPulo);
+        if (corpoRigido != null)
+        {
+            corpoRigido.AddForce(Vector2.up * forcaDoPulo);
+        }
     }
 
     void viraJogador()

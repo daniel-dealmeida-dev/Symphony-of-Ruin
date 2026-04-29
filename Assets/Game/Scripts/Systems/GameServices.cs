@@ -206,7 +206,7 @@ public class SettingsService
     public void ResetProgress()
     {
         data.progress.lastScene = "PrimeiraFase";
-        data.progress.lives = 3;
+        data.progress.lives = GameplayBalance.PlayerInitialHealth;
         data.progress.coinsCollected = 0;
         data.progress.playerPositionX = 0f;
         data.progress.playerPositionY = 0f;
@@ -266,6 +266,7 @@ public class SettingsService
             case GameAction.NavigateDown: return KeyCode.DownArrow;
             case GameAction.NavigateLeft: return KeyCode.LeftArrow;
             case GameAction.NavigateRight: return KeyCode.RightArrow;
+            case GameAction.RangedFire: return KeyCode.Mouse1;
             default: return KeyCode.None;
         }
     }

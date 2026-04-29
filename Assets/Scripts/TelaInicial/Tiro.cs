@@ -7,6 +7,9 @@ public class Tiro : MonoBehaviour
     [SerializeField] private AudioClip shootSFX;
     [SerializeField] private float projectileSpawnOffset = 0.8f;
     [SerializeField] private int projectileDamage = 1;
+    [SerializeField] private float fireCooldown = 0.28f;
+
+    private float nextFireTime;
 
     private void Awake()
     {
@@ -15,17 +18,19 @@ public class Tiro : MonoBehaviour
 
     private void Update()
     {
-        bool firePressed = GameServices.Instance.Settings.GetButtonDown(GameAction.Fire) ||
-                           GameServices.Instance.Settings.GetButtonDown(GameAction.Jump);
-
-        if (!firePressed || projetil == null)
+        if (GameManager.gm != null && (GameManager.gm.jogoPausado || GameManager.gm.gameIsOver))
         {
-            if (!firePressed)
-            {
-                return;
-            }
+            return;
         }
 
+        bool firePressed = GameServices.Instance.Settings.GetButtonDown(GameAction.RangedFire);
+
+        if (!firePressed || Time.time < nextFireTime)
+        {
+            return;
+        }
+
+        nextFireTime = Time.time + fireCooldown;
         Vector2 direction = transform.localScale.x >= 0f ? Vector2.right : Vector2.left;
         Vector3 spawnPosition = transform.position + new Vector3(direction.x * projectileSpawnOffset, 0.25f, 0f);
         GameObject newProjectile = projetil != null
@@ -53,7 +58,13 @@ public class Tiro : MonoBehaviour
         }
 
         projectileRigidbody.gravityScale = 0f;
-        projectileRigidbody.isKinematic = true;
+        projectileRigidbody.bodyType = RigidbodyType2D.Kinematic;
+
+        Collider2D playerCollider = GetComponent<Collider2D>();
+        if (playerCollider != null)
+        {
+            Physics2D.IgnoreCollision(circleCollider, playerCollider);
+        }
 
         if (shootSFX == null)
         {
@@ -80,6 +91,8 @@ public class Tiro : MonoBehaviour
         var projectileObject = new GameObject("Projetil");
         projectileObject.transform.position = spawnPosition;
         var spriteRenderer = projectileObject.AddComponent<SpriteRenderer>();
+        Texture2D texture = Texture2D.whiteTexture;
+        spriteRenderer.sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 16f);
         spriteRenderer.color = new Color(1f, 0.83f, 0.4f, 1f);
         projectileObject.tag = "Projetil";
         projectileObject.transform.localScale = new Vector3(0.18f, 0.18f, 1f);

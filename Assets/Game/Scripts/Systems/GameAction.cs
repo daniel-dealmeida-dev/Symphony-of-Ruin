@@ -14,7 +14,8 @@ public enum GameAction
     NavigateUp,
     NavigateDown,
     NavigateLeft,
-    NavigateRight
+    NavigateRight,
+    RangedFire
 }
 
 [Serializable]

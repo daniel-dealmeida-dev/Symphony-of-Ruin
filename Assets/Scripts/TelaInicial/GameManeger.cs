@@ -36,10 +36,11 @@ public class GameManager : MonoBehaviour
         }
 
         GameServices.EnsureInstance();
+        Time.timeScale = 1f;
         EnsureEnemyBootstrap();
         EnsureSceneUi();
         moedasColetadas = GameServices.Instance.Settings.Data.progress.coinsCollected;
-        playerRoot = GameObject.Find("Personagem")?.transform;
+        playerRoot = ResolvePlayerRoot();
         RestoreSavedPlayerPosition();
         UpdateHud();
     }
@@ -141,6 +142,11 @@ public class GameManager : MonoBehaviour
     public void SaveProgress()
     {
         GameServices.Instance.Settings.SetLastScene(SceneManager.GetActiveScene().name);
+        if (playerRoot == null)
+        {
+            playerRoot = ResolvePlayerRoot();
+        }
+
         if (playerRoot != null)
         {
             GameServices.Instance.Settings.SetPlayerPosition(playerRoot.position);
@@ -245,12 +251,19 @@ public class GameManager : MonoBehaviour
     {
         if (hudText != null)
         {
-            hudText.text = "Moedas: " + moedasColetadas + "\nVidas: " + GameServices.Instance.Settings.Data.progress.lives;
+            PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+            int maxLives = playerHealth != null ? playerHealth.MaxHealth : GameplayBalance.PlayerMaxHealth;
+            hudText.text = "Moedas: " + moedasColetadas + "\nVidas: " + GameServices.Instance.Settings.Data.progress.lives + "/" + maxLives;
         }
     }
 
     private void RestoreSavedPlayerPosition()
     {
+        if (playerRoot == null)
+        {
+            playerRoot = ResolvePlayerRoot();
+        }
+
         if (playerRoot == null)
         {
             return;
@@ -273,6 +286,30 @@ public class GameManager : MonoBehaviour
         }
 
         playerRoot.position = new Vector3(savedPosition.x, savedPosition.y, playerRoot.position.z);
+    }
+
+    private static Transform ResolvePlayerRoot()
+    {
+        PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            return playerHealth.transform;
+        }
+
+        MovimentoJogador movimento = FindFirstObjectByType<MovimentoJogador>();
+        if (movimento != null)
+        {
+            return movimento.transform;
+        }
+
+        GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+        if (taggedPlayer != null)
+        {
+            return taggedPlayer.transform;
+        }
+
+        GameObject legacyRoot = GameObject.Find("Personagem");
+        return legacyRoot != null ? legacyRoot.transform : null;
     }
 
     private void EnsureSettingsCanvas()
@@ -298,6 +335,10 @@ public class GameManager : MonoBehaviour
         textObject.transform.SetParent(parent, false);
         var text = textObject.GetComponent<Text>();
         text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        if (text.font == null)
+        {
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        }
         text.fontSize = size;
         text.alignment = alignment;
         text.color = Color.white;

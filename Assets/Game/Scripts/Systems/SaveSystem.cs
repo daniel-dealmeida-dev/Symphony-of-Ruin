@@ -70,10 +70,12 @@ public static class SaveSystem
     public static GameData CreateDefault()
     {
         var data = new GameData();
+        data.progress.lives = GameplayBalance.PlayerInitialHealth;
         data.keybindings.Add(new KeybindingEntry { action = GameAction.MoveLeft, keyCode = KeyCode.A.ToString() });
         data.keybindings.Add(new KeybindingEntry { action = GameAction.MoveRight, keyCode = KeyCode.D.ToString() });
         data.keybindings.Add(new KeybindingEntry { action = GameAction.Jump, keyCode = KeyCode.Space.ToString() });
         data.keybindings.Add(new KeybindingEntry { action = GameAction.Fire, keyCode = KeyCode.Mouse0.ToString() });
+        data.keybindings.Add(new KeybindingEntry { action = GameAction.RangedFire, keyCode = KeyCode.Mouse1.ToString() });
         data.keybindings.Add(new KeybindingEntry { action = GameAction.Interact, keyCode = KeyCode.E.ToString() });
         data.keybindings.Add(new KeybindingEntry { action = GameAction.Dash, keyCode = KeyCode.LeftShift.ToString() });
         data.keybindings.Add(new KeybindingEntry { action = GameAction.Pause, keyCode = KeyCode.Escape.ToString() });

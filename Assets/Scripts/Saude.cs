@@ -24,12 +24,19 @@ public class Saude : MonoBehaviour
 
     public void dano(int x)
     {
-        Debug.Log("Entrei dano");
+        if (morto || x <= 0)
+        {
+            return;
+        }
+
         saude -= x;
         if (saude <= 0)
         {
             morto = true;
-            animator.SetTrigger("Morte");
+            if (animator != null)
+            {
+                animator.SetTrigger("Morte");
+            }
             if (gameObject.tag == "Player")
             {  // Só reicicia a fase se quem morreu foi o jogador.
                 StartCoroutine(morre());
@@ -39,9 +46,17 @@ public class Saude : MonoBehaviour
 
     public void danoMax()
     {
+        if (morto)
+        {
+            return;
+        }
+
         saude = 0;
         morto = true;
-        animator.SetTrigger("Morte");
+        if (animator != null)
+        {
+            animator.SetTrigger("Morte");
+        }
         if (gameObject.tag == "Player")
         {  // Só reicicia a fase se quem morreu foi o jogador.
             StartCoroutine(morre());

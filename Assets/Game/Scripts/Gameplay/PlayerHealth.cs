@@ -4,21 +4,40 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 3;
-    [SerializeField] private float invulnerabilityDuration = 1.1f;
+    [SerializeField] private int maxHealth = GameplayBalance.PlayerMaxHealth;
+    [SerializeField] private float invulnerabilityDuration = GameplayBalance.PlayerInvulnerabilityAfterHitSeconds;
+    [SerializeField] private float knockbackForce = GameplayBalance.PlayerKnockbackForce;
+    [SerializeField] private float gameOverDelay = 0.65f;
     [SerializeField] private SpriteRenderer targetRenderer;
 
     private int currentHealth;
     private bool isInvulnerable;
+    private bool isAlive = true;
+    private MovimentoJogador movimento;
+    private float nextDamageTime;
 
     public int CurrentHealth
     {
         get { return currentHealth; }
     }
 
+    public bool IsAlive
+    {
+        get { return isAlive; }
+    }
+
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+    }
+
     private void Awake()
     {
         GameServices.EnsureInstance();
+        movimento = GetComponent<MovimentoJogador>();
+        maxHealth = Mathf.Max(1, GameplayBalance.PlayerMaxHealth);
+        invulnerabilityDuration = GameplayBalance.PlayerInvulnerabilityAfterHitSeconds;
+        knockbackForce = GameplayBalance.PlayerKnockbackForce;
 
         if (targetRenderer == null)
         {
@@ -29,16 +48,31 @@ public class PlayerHealth : MonoBehaviour
             }
         }
 
-        currentHealth = Mathf.Clamp(GameServices.Instance.Settings.Data.progress.lives, 1, maxHealth);
+        // A fase sempre comeca com vida cheia; saves antigos guardavam 3 vidas e deixavam o jogador fragil ao iniciar.
+        currentHealth = Mathf.Clamp(GameplayBalance.PlayerInitialHealth, 1, maxHealth);
+        nextDamageTime = Time.unscaledTime + GameplayBalance.PlayerSpawnDamageGraceSeconds;
         GameServices.Instance.Settings.SetLives(currentHealth);
     }
 
     public void ReceiveDamage(int damage)
     {
-        if (isInvulnerable || damage <= 0)
+        ReceiveDamage(damage, transform.position);
+    }
+
+    public void ReceiveDamage(int damage, Vector2 damageSource)
+    {
+        if (isInvulnerable || damage <= 0 || Time.unscaledTime < nextDamageTime)
         {
             return;
         }
+
+        if (!isAlive || (GameManager.gm != null && GameManager.gm.gameIsOver))
+        {
+            return;
+        }
+
+        isInvulnerable = true;
+        nextDamageTime = Time.unscaledTime + invulnerabilityDuration;
 
         currentHealth = Mathf.Max(0, currentHealth - damage);
         GameServices.Instance.Settings.SetLives(currentHealth);
@@ -50,12 +84,13 @@ public class PlayerHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            if (GameManager.gm != null)
-            {
-                GameManager.gm.FinalizarJogo();
-            }
-
+            Die();
             return;
+        }
+
+        if (movimento != null)
+        {
+            movimento.AplicarEmpurrao(damageSource, knockbackForce);
         }
 
         StartCoroutine(InvulnerabilityRoutine());
@@ -64,6 +99,9 @@ public class PlayerHealth : MonoBehaviour
     public void HealToFull()
     {
         currentHealth = maxHealth;
+        isAlive = true;
+        isInvulnerable = false;
+        nextDamageTime = Time.unscaledTime + GameplayBalance.PlayerSpawnDamageGraceSeconds;
         GameServices.Instance.Settings.SetLives(currentHealth);
         if (GameManager.gm != null)
         {
@@ -71,13 +109,38 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    private void Die()
+    {
+        if (!isAlive)
+        {
+            return;
+        }
+
+        isAlive = false;
+        isInvulnerable = true;
+
+        if (movimento != null)
+        {
+            movimento.SetControlesAtivos(false);
+            movimento.TocarMorte();
+        }
+
+        StartCoroutine(FinalizarJogoDepoisDaAnimacao());
+    }
+
+    private IEnumerator FinalizarJogoDepoisDaAnimacao()
+    {
+        yield return new WaitForSecondsRealtime(gameOverDelay);
+        if (GameManager.gm != null)
+        {
+            GameManager.gm.FinalizarJogo();
+        }
+    }
+
     private IEnumerator InvulnerabilityRoutine()
     {
-        isInvulnerable = true;
-        float elapsed = 0f;
-        while (elapsed < invulnerabilityDuration)
+        while (Time.unscaledTime < nextDamageTime && isAlive)
         {
-            elapsed += Time.unscaledDeltaTime;
             if (targetRenderer != null)
             {
                 targetRenderer.enabled = !targetRenderer.enabled;

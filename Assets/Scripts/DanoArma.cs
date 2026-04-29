@@ -10,8 +10,21 @@ public class DanoArma : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D outro)
     {
-        if (outro.tag == tagInimigo){
-            outro.gameObject.GetComponent<Saude>().dano(dano);
+        if (outro.gameObject.tag == tagInimigo || outro.GetComponentInParent<EnemyHealth>() != null)
+        {
+            EnemyHealth enemyHealth = outro.GetComponentInParent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(dano, transform.position);
+            }
+            else
+            {
+                Saude saude = outro.GetComponentInParent<Saude>();
+                if (saude != null)
+                {
+                    saude.dano(dano);
+                }
+            }
         }
         if(explosao){
             Instantiate(explosao, transform.position, transform.rotation);

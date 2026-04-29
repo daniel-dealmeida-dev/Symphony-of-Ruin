@@ -8,8 +8,18 @@ public class ZonaMortal : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            // se for o jogador, entao cause sua morte com dano maximo
-            other.gameObject.GetComponent<Saude>().danoMax();
+            PlayerHealth playerHealth = other.gameObject.GetComponentInParent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.ReceiveDamage(999, transform.position);
+                return;
+            }
+
+            Saude saude = other.gameObject.GetComponentInParent<Saude>();
+            if (saude != null)
+            {
+                saude.danoMax();
+            }
         }
         else
         { // se for qualquer outra coisa, como um inimigo caindo por ex, destrua o objeto
