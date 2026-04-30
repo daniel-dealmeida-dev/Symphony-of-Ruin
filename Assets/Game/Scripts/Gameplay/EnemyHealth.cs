@@ -5,7 +5,7 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 2;
     [SerializeField] private int touchDamage = GameplayBalance.DefaultEnemyDamage;
-    [SerializeField] private float deathDestroyDelay = 0.35f;
+    [SerializeField] private float deathDestroyDelay = 0.9f;
 
     private int currentHealth;
     private bool isDead;
@@ -15,6 +15,21 @@ public class EnemyHealth : MonoBehaviour
     public int TouchDamage
     {
         get { return touchDamage; }
+    }
+
+    public int CurrentHealth
+    {
+        get { return currentHealth; }
+    }
+
+    public bool IsDead
+    {
+        get { return isDead; }
+    }
+
+    public int MaxHealth
+    {
+        get { return maxHealth; }
     }
 
     private void Awake()

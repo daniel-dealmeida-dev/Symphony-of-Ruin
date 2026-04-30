@@ -1,0 +1,12 @@
+{
+  "version": "PlayerIdleConsistent_v3",
+  "sheet": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\sheets\\player_idle_sheet_416x288.png",
+  "clip": "Assets\\Anima\u00e7\u00f5es\\PlayerIdleConsistentV3.anim",
+  "sheet_guid": "b0d1c0de000000000000000000000110",
+  "clip_guid": "b0d1c0de000000000000000000000210",
+  "qa": [
+    "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\qa\\player_idle_v3_audit.json",
+    "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\qa\\player_idle_v3_audit.md",
+    "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\qa\\player_idle_v3_alignment_contact.png"
+  ]
+}

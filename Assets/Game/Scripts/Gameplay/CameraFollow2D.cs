@@ -3,14 +3,23 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CameraFollow2D : MonoBehaviour
 {
-    [SerializeField] private Vector3 offset = new Vector3(0f, 1.1f, -25f);
-    [SerializeField] private float smoothTime = 0.14f;
-    [SerializeField] private float verticalPadding = 2.5f;
-    [SerializeField] private float horizontalPadding = 4f;
+    [SerializeField] private Vector3 offset = new Vector3(0f, 1.25f, -25f);
+    [SerializeField] private float smoothTime = 0.12f;
+    [SerializeField] private Vector2 deadZone = new Vector2(0.75f, 0.35f);
+    [SerializeField] private float lookAheadDistance = 1.15f;
+    [SerializeField] private float lookAheadSmoothTime = 0.18f;
+    [SerializeField] private float maxFollowSpeed = 32f;
+    [SerializeField] private float snapDistance = 12f;
+    [SerializeField] private float verticalPadding = 2.3f;
+    [SerializeField] private float horizontalPadding = 3.5f;
 
     private Transform target;
+    private Rigidbody2D targetBody;
     private Vector3 velocity;
     private Camera targetCamera;
+    private float lookAhead;
+    private float lookAheadVelocity;
+    private bool hasSnappedToTarget;
 
     private void Awake()
     {
@@ -29,7 +38,66 @@ public class CameraFollow2D : MonoBehaviour
             }
         }
 
-        Vector3 desired = target.position + offset;
+        Vector3 desired = CalculateDesiredPosition();
+        if (!hasSnappedToTarget || Vector2.Distance(transform.position, desired) > snapDistance)
+        {
+            transform.position = desired;
+            velocity = Vector3.zero;
+            hasSnappedToTarget = true;
+            return;
+        }
+
+        desired = ApplyDeadZone(desired);
+        transform.position = Vector3.SmoothDamp(transform.position, desired, ref velocity, smoothTime, maxFollowSpeed);
+    }
+
+    private Vector3 CalculateDesiredPosition()
+    {
+        UpdateLookAhead();
+        Vector3 desired = target.position + offset + new Vector3(lookAhead, 0f, 0f);
+        return ClampToPlayableBounds(desired);
+    }
+
+    private void UpdateLookAhead()
+    {
+        float targetLookAhead = 0f;
+        if (targetBody != null && Mathf.Abs(targetBody.velocity.x) > 0.1f)
+        {
+            targetLookAhead = Mathf.Sign(targetBody.velocity.x) * lookAheadDistance;
+        }
+
+        lookAhead = Mathf.SmoothDamp(lookAhead, targetLookAhead, ref lookAheadVelocity, lookAheadSmoothTime);
+    }
+
+    private Vector3 ApplyDeadZone(Vector3 desired)
+    {
+        Vector3 adjusted = desired;
+        float deltaX = desired.x - transform.position.x;
+        if (Mathf.Abs(deltaX) <= deadZone.x)
+        {
+            adjusted.x = transform.position.x;
+        }
+        else
+        {
+            adjusted.x = desired.x - Mathf.Sign(deltaX) * deadZone.x;
+        }
+
+        float deltaY = desired.y - transform.position.y;
+        if (Mathf.Abs(deltaY) <= deadZone.y)
+        {
+            adjusted.y = transform.position.y;
+        }
+        else
+        {
+            adjusted.y = desired.y - Mathf.Sign(deltaY) * deadZone.y;
+        }
+
+        adjusted.z = offset.z;
+        return ClampToPlayableBounds(adjusted);
+    }
+
+    private Vector3 ClampToPlayableBounds(Vector3 desired)
+    {
         Bounds bounds = EnemySceneBootstrap.CalculatePlayableBounds();
         if (bounds.size.x > 0.1f && targetCamera != null)
         {
@@ -45,7 +113,7 @@ public class CameraFollow2D : MonoBehaviour
         }
 
         desired.z = offset.z;
-        transform.position = Vector3.SmoothDamp(transform.position, desired, ref velocity, smoothTime);
+        return desired;
     }
 
     private void ResolveTarget()
@@ -53,14 +121,28 @@ public class CameraFollow2D : MonoBehaviour
         PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
         if (playerHealth != null)
         {
-            target = playerHealth.transform;
+            SetTarget(playerHealth.transform);
             return;
         }
 
         MovimentoJogador movimento = FindFirstObjectByType<MovimentoJogador>();
         if (movimento != null)
         {
-            target = movimento.transform;
+            SetTarget(movimento.transform);
         }
+    }
+
+    private void SetTarget(Transform newTarget)
+    {
+        if (target == newTarget)
+        {
+            return;
+        }
+
+        target = newTarget;
+        targetBody = target != null ? target.GetComponent<Rigidbody2D>() : null;
+        hasSnappedToTarget = false;
+        lookAhead = 0f;
+        lookAheadVelocity = 0f;
     }
 }

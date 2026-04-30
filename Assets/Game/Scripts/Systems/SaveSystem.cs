@@ -40,6 +40,7 @@ public static class SaveSystem
     {
         try
         {
+            data = Normalize(data);
             Directory.CreateDirectory(Application.persistentDataPath);
 
             string json = JsonUtility.ToJson(data, true);
@@ -71,20 +72,7 @@ public static class SaveSystem
     {
         var data = new GameData();
         data.progress.lives = GameplayBalance.PlayerInitialHealth;
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.MoveLeft, keyCode = KeyCode.A.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.MoveRight, keyCode = KeyCode.D.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.Jump, keyCode = KeyCode.Space.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.Fire, keyCode = KeyCode.Mouse0.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.RangedFire, keyCode = KeyCode.Mouse1.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.Interact, keyCode = KeyCode.E.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.Dash, keyCode = KeyCode.LeftShift.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.Pause, keyCode = KeyCode.Escape.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.Submit, keyCode = KeyCode.Return.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.Cancel, keyCode = KeyCode.Backspace.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.NavigateUp, keyCode = KeyCode.UpArrow.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.NavigateDown, keyCode = KeyCode.DownArrow.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.NavigateLeft, keyCode = KeyCode.LeftArrow.ToString() });
-        data.keybindings.Add(new KeybindingEntry { action = GameAction.NavigateRight, keyCode = KeyCode.RightArrow.ToString() });
+        data.keybindings = GameActionDefaults.CreateDefaultKeybindings();
         return data;
     }
 
@@ -104,12 +92,100 @@ public static class SaveSystem
             }
 
             var data = JsonUtility.FromJson<GameData>(json);
-            return data ?? CreateDefault();
+            return Normalize(data);
         }
         catch (Exception exception)
         {
             Debug.LogWarning("Falha ao carregar arquivo de save em " + path + ": " + exception.Message);
             return null;
         }
+    }
+
+    private static GameData Normalize(GameData data)
+    {
+        if (data == null)
+        {
+            return CreateDefault();
+        }
+
+        if (data.audio == null)
+        {
+            data.audio = new AudioSettingsData();
+        }
+
+        data.audio.masterVolume = Mathf.Clamp01(data.audio.masterVolume);
+        data.audio.musicVolume = Mathf.Clamp01(data.audio.musicVolume);
+        data.audio.sfxVolume = Mathf.Clamp01(data.audio.sfxVolume);
+
+        if (data.progress == null)
+        {
+            data.progress = new ProgressData();
+        }
+
+        if (string.IsNullOrWhiteSpace(data.progress.lastScene))
+        {
+            data.progress.lastScene = "TelaInicial";
+        }
+
+        data.progress.lives = Mathf.Clamp(data.progress.lives, 0, GameplayBalance.PlayerMaxHealth);
+        data.progress.coinsCollected = Mathf.Max(0, data.progress.coinsCollected);
+
+        if (data.progress.completedScenes == null)
+        {
+            data.progress.completedScenes = new System.Collections.Generic.List<string>();
+        }
+
+        data.selectedAttackSpriteVersion = PlayerAttackSpriteVersions.NormalizeVersionId(data.selectedAttackSpriteVersion);
+
+        if (data.keybindings == null)
+        {
+            data.keybindings = new System.Collections.Generic.List<KeybindingEntry>();
+        }
+
+        var seenActions = new System.Collections.Generic.HashSet<GameAction>();
+        var normalizedBindings = new System.Collections.Generic.List<KeybindingEntry>();
+        foreach (KeybindingEntry entry in data.keybindings)
+        {
+            if (entry == null
+                || !Enum.IsDefined(typeof(GameAction), entry.action)
+                || entry.action == GameAction.Fire
+                || !seenActions.Add(entry.action))
+            {
+                continue;
+            }
+
+            KeyCode keyCode;
+            if (string.IsNullOrWhiteSpace(entry.keyCode) || !Enum.TryParse(entry.keyCode, out keyCode) || keyCode == KeyCode.None)
+            {
+                keyCode = GameActionDefaults.GetDefaultKey(entry.action);
+            }
+            else if (entry.action != GameAction.Jump && keyCode == KeyCode.Space)
+            {
+                keyCode = GameActionDefaults.GetDefaultKey(entry.action);
+            }
+
+            normalizedBindings.Add(new KeybindingEntry
+            {
+                action = entry.action,
+                keyCode = keyCode.ToString()
+            });
+        }
+
+        foreach (GameAction action in GameActionDefaults.RebindableActions)
+        {
+            if (seenActions.Contains(action))
+            {
+                continue;
+            }
+
+            normalizedBindings.Add(new KeybindingEntry
+            {
+                action = action,
+                keyCode = GameActionDefaults.GetDefaultKey(action).ToString()
+            });
+        }
+
+        data.keybindings = normalizedBindings;
+        return data;
     }
 }

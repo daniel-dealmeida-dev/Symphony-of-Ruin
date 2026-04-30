@@ -1,0 +1,158 @@
+{
+  "version": "PlayerIdleConsistent_v3",
+  "source_version": "PlayerBodyConsistent_v1 idle frames",
+  "repairs": {
+    "2": [
+      141
+    ],
+    "3": [
+      97,
+      184
+    ],
+    "4": [
+      141
+    ]
+  },
+  "remaining_suspect_rows": [],
+  "sheet": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\sheets\\player_idle_sheet_416x288.png",
+  "clip": "Assets\\Anima\u00e7\u00f5es\\PlayerIdleConsistentV3.anim",
+  "sheet_guid": "b0d1c0de000000000000000000000110",
+  "clip_guid": "b0d1c0de000000000000000000000210",
+  "frame_size": [
+    416,
+    288
+  ],
+  "pivot": [
+    0.5,
+    0.410526
+  ],
+  "ppu": 55,
+  "frames": [
+    {
+      "name": "player_idle_01",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_01.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_01.png",
+      "file_id": 6000000000000000001,
+      "bbox": [
+        152,
+        56,
+        336,
+        260
+      ]
+    },
+    {
+      "name": "player_idle_02",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_02.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_02.png",
+      "file_id": 6000000000000000002,
+      "bbox": [
+        152,
+        55,
+        336,
+        260
+      ],
+      "repairs": [
+        {
+          "row": 141,
+          "alpha_count_before": 0,
+          "alpha_count_after": 119,
+          "pixels_repaired": 119
+        }
+      ]
+    },
+    {
+      "name": "player_idle_03",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_03.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_03.png",
+      "file_id": 6000000000000000003,
+      "bbox": [
+        152,
+        54,
+        336,
+        260
+      ],
+      "repairs": [
+        {
+          "row": 97,
+          "alpha_count_before": 0,
+          "alpha_count_after": 49,
+          "pixels_repaired": 49
+        },
+        {
+          "row": 184,
+          "alpha_count_before": 0,
+          "alpha_count_after": 97,
+          "pixels_repaired": 97
+        }
+      ]
+    },
+    {
+      "name": "player_idle_04",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_04.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_04.png",
+      "file_id": 6000000000000000004,
+      "bbox": [
+        152,
+        55,
+        336,
+        260
+      ],
+      "repairs": [
+        {
+          "row": 141,
+          "alpha_count_before": 0,
+          "alpha_count_after": 119,
+          "pixels_repaired": 119
+        }
+      ]
+    },
+    {
+      "name": "player_idle_05",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_05.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_05.png",
+      "file_id": 6000000000000000005,
+      "bbox": [
+        152,
+        56,
+        336,
+        260
+      ]
+    },
+    {
+      "name": "player_idle_06",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_06.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_06.png",
+      "file_id": 6000000000000000006,
+      "bbox": [
+        152,
+        57,
+        336,
+        260
+      ]
+    },
+    {
+      "name": "player_idle_07",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_07.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_07.png",
+      "file_id": 6000000000000000007,
+      "bbox": [
+        152,
+        58,
+        336,
+        260
+      ]
+    },
+    {
+      "name": "player_idle_08",
+      "source": "Assets\\Resources\\SpritsProtagoniista\\PlayerBodyConsistent_v1\\frames\\idle\\player_idle_08.png",
+      "output": "Assets\\Resources\\SpritsProtagoniista\\PlayerIdleConsistent_v3\\frames\\player_idle_08.png",
+      "file_id": 6000000000000000008,
+      "bbox": [
+        152,
+        57,
+        336,
+        260
+      ]
+    }
+  ]
+}

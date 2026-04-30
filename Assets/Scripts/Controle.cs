@@ -40,7 +40,11 @@ public class Controle : MonoBehaviour
         // CONTROLES
         moveX = GameServices.Instance.Settings.GetHorizontal();
         noChao = terra != null && Physics2D.Linecast(transform.position, terra.position, chao);
-        bool ataquePressionado = GameServices.Instance.Settings.GetButtonDown(GameAction.Fire);
+        bool ataquePressionado =
+            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine1) ||
+            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine2) ||
+            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine3) ||
+            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine4);
         bool puloPressionado = GameServices.Instance.Settings.GetButtonDown(GameAction.Jump);
         if (ataquePressionado)
         {

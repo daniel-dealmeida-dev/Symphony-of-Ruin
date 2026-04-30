@@ -10,6 +10,8 @@ public class EnemyPatrol2D : MonoBehaviour
     [SerializeField] private float detectionRange = 7f;
     [SerializeField] private float attackRange = 1.15f;
     [SerializeField] private float attackCooldown = GameplayBalance.DefaultEnemyAttackCooldownSeconds;
+    [SerializeField] private float attackWindup = 0.16f;
+    [SerializeField] private float attackMovementPause = 0.36f;
     [SerializeField] private int attackDamage = GameplayBalance.DefaultEnemyDamage;
     [SerializeField] private bool flyingEnemy = false;
     [SerializeField] private float groundProbeDistance = 1.15f;
@@ -27,6 +29,7 @@ public class EnemyPatrol2D : MonoBehaviour
     private Bounds playableBounds;
     private bool hasPlayableBounds;
     private LayerMask groundMask = ~0;
+    private Coroutine attackRoutine;
 
     public bool FlyingEnemy
     {
@@ -158,6 +161,15 @@ public class EnemyPatrol2D : MonoBehaviour
                     return;
                 }
 
+                if (!flyingEnemy && ShouldTurnAround())
+                {
+                    velocity.x = 0f;
+                    body.velocity = velocity;
+                    FaceDirection();
+                    SetMoving(false);
+                    return;
+                }
+
                 velocity.x = chaseSpeed * direction;
                 if (flyingEnemy)
                 {
@@ -217,21 +229,43 @@ public class EnemyPatrol2D : MonoBehaviour
 
     private void TryAttackPlayer()
     {
-        if (Time.time < nextAttackTime)
+        if (Time.time < nextAttackTime || attackRoutine != null)
         {
             return;
         }
 
         nextAttackTime = Time.time + attackCooldown;
-        pauseMovementUntil = Time.time + 0.25f;
+        pauseMovementUntil = Time.time + attackMovementPause;
         if (presentation != null)
         {
             presentation.PlayAttack();
         }
 
-        if (playerHealth != null)
+        attackRoutine = StartCoroutine(ApplyAttackAfterWindup());
+    }
+
+    private System.Collections.IEnumerator ApplyAttackAfterWindup()
+    {
+        yield return new WaitForSeconds(Mathf.Max(0f, attackWindup));
+
+        if (playerHealth != null && playerHealth.IsAlive && player != null)
         {
-            playerHealth.ReceiveDamage(attackDamage, transform.position);
+            float currentDistance = Vector2.Distance(player.position, transform.position);
+            if (currentDistance <= attackRange + 0.25f)
+            {
+                playerHealth.ReceiveDamage(attackDamage, transform.position);
+            }
+        }
+
+        attackRoutine = null;
+    }
+
+    private void OnDisable()
+    {
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            attackRoutine = null;
         }
     }
 

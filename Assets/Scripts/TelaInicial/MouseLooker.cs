@@ -27,7 +27,15 @@ public class MouseLooker : MonoBehaviour {
 		character = gameObject.transform;
 
 		// get a reference to the main camera's transform
-		cameraTransform = Camera.main.transform;
+		Camera mainCamera = Camera.main;
+		if (mainCamera == null)
+		{
+			Debug.LogWarning("MouseLooker desativado: camera principal nao encontrada.");
+			enabled = false;
+			return;
+		}
+
+		cameraTransform = mainCamera.transform;
 
 		// get the location rotation of the character and the camera
 		m_CharacterTargetRot = character.localRotation;
@@ -71,6 +79,11 @@ public class MouseLooker : MonoBehaviour {
 
 	public void LookRotation()
 	{
+		if (character == null || cameraTransform == null)
+		{
+			return;
+		}
+
 		//get the y and x rotation based on the Input manager
 		float yRot = Input.GetAxis("Mouse X") * XSensitivity;
 		float xRot = Input.GetAxis("Mouse Y") * YSensitivity;

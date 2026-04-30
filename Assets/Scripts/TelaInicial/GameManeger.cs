@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public bool gameIsOver = false;
 
     private Text hudText;
+    private GameObject attackButtonsRoot;
     private SettingsPanelController settingsPanelController;
     private Transform playerRoot;
     private bool pauseInputReleased = true;
@@ -43,6 +44,15 @@ public class GameManager : MonoBehaviour
         playerRoot = ResolvePlayerRoot();
         RestoreSavedPlayerPosition();
         UpdateHud();
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+            gm = null;
+        }
     }
 
     private void Update()
@@ -206,6 +216,23 @@ public class GameManager : MonoBehaviour
             hudTextRect.offsetMin = Vector2.zero;
             hudTextRect.offsetMax = Vector2.zero;
         }
+
+        EnsureAttackButtons(canvas.transform);
+
+        if (attackButtonsRoot != null)
+        {
+            attackButtonsRoot.transform.SetAsLastSibling();
+        }
+
+        if (painelPause != null)
+        {
+            painelPause.transform.SetAsLastSibling();
+        }
+
+        if (painelGameOver != null)
+        {
+            painelGameOver.transform.SetAsLastSibling();
+        }
     }
 
     private static void EnsureEnemyBootstrap()
@@ -237,7 +264,30 @@ public class GameManager : MonoBehaviour
     private void OpenSettingsPanel()
     {
         EnsureSettingsCanvas();
-        painelPause.SetActive(false);
+        if (settingsPanelController == null)
+        {
+            return;
+        }
+
+        if (painelPause != null)
+        {
+            painelPause.SetActive(false);
+        }
+
+        settingsPanelController.gameObject.SetActive(true);
+    }
+
+    private void CloseSettingsPanel()
+    {
+        if (settingsPanelController != null)
+        {
+            settingsPanelController.gameObject.SetActive(false);
+        }
+
+        if (painelPause != null)
+        {
+            painelPause.SetActive(true);
+        }
     }
 
     private void ReturnToMainMenu()
@@ -255,6 +305,76 @@ public class GameManager : MonoBehaviour
             int maxLives = playerHealth != null ? playerHealth.MaxHealth : GameplayBalance.PlayerMaxHealth;
             hudText.text = "Moedas: " + moedasColetadas + "\nVidas: " + GameServices.Instance.Settings.Data.progress.lives + "/" + maxLives;
         }
+    }
+
+    private void EnsureAttackButtons(Transform canvasTransform)
+    {
+        if (attackButtonsRoot != null || canvasTransform == null)
+        {
+            return;
+        }
+
+        attackButtonsRoot = new GameObject("AttackTouchButtons", typeof(RectTransform));
+        attackButtonsRoot.transform.SetParent(canvasTransform, false);
+
+        var rootRect = attackButtonsRoot.GetComponent<RectTransform>();
+        rootRect.anchorMin = new Vector2(1f, 0f);
+        rootRect.anchorMax = new Vector2(1f, 0f);
+        rootRect.pivot = new Vector2(1f, 0f);
+        rootRect.anchoredPosition = new Vector2(-28f, 28f);
+        rootRect.sizeDelta = new Vector2(228f, 228f);
+
+        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack1Button", "Z", 0, new Vector2(-118f, 118f));
+        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack2Button", "X", 1, new Vector2(-8f, 118f));
+        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack3Button", "C", 2, new Vector2(-118f, 8f));
+        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack4Button", "V", 3, new Vector2(-8f, 8f));
+    }
+
+    private void CreateAttackTouchButton(Transform parent, string name, string label, int attackIndex, Vector2 anchoredPosition)
+    {
+        var buttonObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        buttonObject.transform.SetParent(parent, false);
+
+        var rect = buttonObject.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(1f, 0f);
+        rect.anchorMax = new Vector2(1f, 0f);
+        rect.pivot = new Vector2(1f, 0f);
+        rect.anchoredPosition = anchoredPosition;
+        rect.sizeDelta = new Vector2(96f, 96f);
+
+        var image = buttonObject.GetComponent<Image>();
+        image.color = new Color(0.08f, 0.11f, 0.16f, 0.72f);
+
+        var touchButton = buttonObject.AddComponent<AttackTouchButton>();
+        touchButton.Initialize(this, attackIndex, image);
+
+        var text = CreateText(buttonObject.transform, "Label", TextAnchor.MiddleCenter, 34);
+        text.text = label;
+        text.fontStyle = FontStyle.Bold;
+        text.color = new Color(0.9f, 0.96f, 1f, 1f);
+        text.raycastTarget = false;
+
+        var textRect = text.GetComponent<RectTransform>();
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.offsetMin = Vector2.zero;
+        textRect.offsetMax = Vector2.zero;
+    }
+
+    public void SolicitarAtaquePeloHud(int attackIndex)
+    {
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        MovimentoJogador movimento = FindFirstObjectByType<MovimentoJogador>();
+        if (movimento == null)
+        {
+            return;
+        }
+
+        movimento.SolicitarAtaqueGuitarra(attackIndex);
     }
 
     private void RestoreSavedPlayerPosition()
@@ -316,8 +436,25 @@ public class GameManager : MonoBehaviour
     {
         if (settingsPanelController != null)
         {
+            settingsPanelController.SetCloseAction(CloseSettingsPanel);
             return;
         }
+
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            EnsureSceneUi();
+            canvas = FindFirstObjectByType<Canvas>();
+        }
+
+        if (canvas == null)
+        {
+            Debug.LogWarning("Nao foi possivel criar painel de configuracoes: canvas nao encontrado.");
+            return;
+        }
+
+        settingsPanelController = SettingsPanelController.CreateRuntimePanel(canvas.transform, CloseSettingsPanel);
+        settingsPanelController.gameObject.SetActive(false);
     }
 
     private static GameObject CreatePanel(Transform parent, string name, Color color)
@@ -377,5 +514,59 @@ public class GameManager : MonoBehaviour
         textRect.anchorMax = Vector2.one;
         textRect.offsetMin = Vector2.zero;
         textRect.offsetMax = Vector2.zero;
+    }
+}
+
+internal class AttackTouchButton : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+{
+    private static readonly Color NormalColor = new Color(0.08f, 0.11f, 0.16f, 0.72f);
+    private static readonly Color PressedColor = new Color(0.48f, 0.72f, 1f, 0.92f);
+
+    private GameManager gameManager;
+    private Image targetImage;
+    private int attackIndex;
+
+    public void Initialize(GameManager manager, int attackLineIndex, Image image)
+    {
+        gameManager = manager;
+        attackIndex = attackLineIndex;
+        targetImage = image;
+        SetPressed(false);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (gameManager != null)
+        {
+            gameManager.SolicitarAtaquePeloHud(attackIndex);
+        }
+
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        SetPressed(true);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        SetPressed(false);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SetPressed(false);
+    }
+
+    private void SetPressed(bool pressed)
+    {
+        if (targetImage != null)
+        {
+            targetImage.color = pressed ? PressedColor : NormalColor;
+        }
     }
 }

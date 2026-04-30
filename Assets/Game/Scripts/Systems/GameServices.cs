@@ -58,6 +58,12 @@ public class GameServices : MonoBehaviour
         if (Instance == this)
         {
             SceneManager.sceneLoaded -= HandleSceneLoaded;
+            if (Audio != null)
+            {
+                Audio.Dispose();
+            }
+
+            Instance = null;
         }
     }
 
@@ -87,17 +93,24 @@ public class SettingsService
 
         foreach (var entry in data.keybindings)
         {
+            if (entry.action == GameAction.Fire)
+            {
+                continue;
+            }
+
             if (Enum.TryParse(entry.keyCode, out KeyCode parsedKey))
             {
                 bindings[entry.action] = parsedKey;
             }
         }
 
-        foreach (GameAction action in Enum.GetValues(typeof(GameAction)))
+        MigrateLegacyDefaultBindings();
+
+        foreach (GameAction action in GameActionDefaults.RebindableActions)
         {
             if (!bindings.ContainsKey(action))
             {
-                bindings[action] = GetDefaultKey(action);
+                bindings[action] = GameActionDefaults.GetDefaultKey(action);
             }
         }
 
@@ -107,11 +120,7 @@ public class SettingsService
 
     public void Save()
     {
-        if (data == null)
-        {
-            data = SaveSystem.CreateDefault();
-        }
-
+        EnsureData();
         PersistBindingsToData();
         SaveSystem.Save(data);
         OnSettingsApplied?.Invoke();
@@ -119,17 +128,17 @@ public class SettingsService
 
     public bool GetButton(GameAction action)
     {
-        return Input.GetKey(GetKey(action));
+        return ReadActionKey(action, Input.GetKey);
     }
 
     public bool GetButtonDown(GameAction action)
     {
-        return Input.GetKeyDown(GetKey(action));
+        return ReadActionKey(action, Input.GetKeyDown);
     }
 
     public bool GetButtonUp(GameAction action)
     {
-        return Input.GetKeyUp(GetKey(action));
+        return ReadActionKey(action, Input.GetKeyUp);
     }
 
     public float GetHorizontal()
@@ -148,18 +157,75 @@ public class SettingsService
         return Mathf.Clamp(axis, -1f, 1f);
     }
 
+    public string SelectedAttackSpriteVersionId
+    {
+        get
+        {
+            EnsureData();
+            EnsureSelectedAttackSpriteVersion();
+            return data.selectedAttackSpriteVersion;
+        }
+    }
+
+    public string GetSelectedAttackSpriteResourcePath()
+    {
+        EnsureData();
+        EnsureSelectedAttackSpriteVersion();
+        return PlayerAttackSpriteVersions.GetResourcePath(data.selectedAttackSpriteVersion);
+    }
+
+    public string GetSelectedAttackSpriteDisplayName()
+    {
+        EnsureData();
+        EnsureSelectedAttackSpriteVersion();
+        return PlayerAttackSpriteVersions.GetDisplayName(data.selectedAttackSpriteVersion);
+    }
+
+    public void SetSelectedAttackSpriteVersion(string versionId)
+    {
+        EnsureData();
+        string normalizedVersionId = PlayerAttackSpriteVersions.NormalizeVersionId(versionId);
+        if (data.selectedAttackSpriteVersion == normalizedVersionId)
+        {
+            return;
+        }
+
+        data.selectedAttackSpriteVersion = normalizedVersionId;
+        Save();
+    }
+
     public KeyCode GetKey(GameAction action)
     {
-        return bindings[action];
+        KeyCode keyCode;
+        if (bindings.TryGetValue(action, out keyCode))
+        {
+            return keyCode;
+        }
+
+        keyCode = GameActionDefaults.GetDefaultKey(action);
+        bindings[action] = keyCode;
+        return keyCode;
     }
 
     public bool TryRebind(GameAction action, KeyCode newKey, out string error)
     {
+        if (newKey == KeyCode.None)
+        {
+            error = "Escolha uma tecla valida.";
+            return false;
+        }
+
+        if (action != GameAction.Jump && newKey == KeyCode.Space)
+        {
+            error = "Espaco reservado para pular.";
+            return false;
+        }
+
         foreach (var pair in bindings)
         {
             if (pair.Key != action && pair.Value == newKey)
             {
-                error = "A tecla " + newKey + " ja esta em uso por " + pair.Key + ".";
+                error = "A tecla " + newKey + " ja esta em uso por " + GameActionDefaults.GetDisplayName(pair.Key) + ".";
                 return false;
             }
         }
@@ -171,8 +237,57 @@ public class SettingsService
         return true;
     }
 
+    private void MigrateLegacyDefaultBindings()
+    {
+        MigrateBindingIfStillLegacyDefault(GameAction.MoveLeft, KeyCode.A);
+        MigrateBindingIfStillLegacyDefault(GameAction.MoveRight, KeyCode.D);
+        MigrateBindingIfStillLegacyDefault(GameAction.Fire, KeyCode.Mouse0);
+    }
+
+    private void MigrateBindingIfStillLegacyDefault(GameAction action, KeyCode legacyDefault)
+    {
+        KeyCode currentKey;
+        if (bindings.TryGetValue(action, out currentKey) && currentKey == legacyDefault)
+        {
+            bindings[action] = GameActionDefaults.GetDefaultKey(action);
+        }
+    }
+
+    private bool ReadActionKey(GameAction action, Func<KeyCode, bool> readKey)
+    {
+        KeyCode primaryKey = GetKey(action);
+        if (readKey(primaryKey))
+        {
+            return true;
+        }
+
+        KeyCode controlCounterpart;
+        return action == GameAction.Fire &&
+               TryGetControlCounterpart(primaryKey, out controlCounterpart) &&
+               readKey(controlCounterpart);
+    }
+
+    private static bool TryGetControlCounterpart(KeyCode keyCode, out KeyCode counterpart)
+    {
+        if (keyCode == KeyCode.LeftControl)
+        {
+            counterpart = KeyCode.RightControl;
+            return true;
+        }
+
+        if (keyCode == KeyCode.RightControl)
+        {
+            counterpart = KeyCode.LeftControl;
+            return true;
+        }
+
+        counterpart = KeyCode.None;
+        return false;
+    }
+
     public void SetVolumes(float master, float music, float sfx)
     {
+        EnsureData();
         data.audio.masterVolume = Mathf.Clamp01(master);
         data.audio.musicVolume = Mathf.Clamp01(music);
         data.audio.sfxVolume = Mathf.Clamp01(sfx);
@@ -181,12 +296,14 @@ public class SettingsService
 
     public void SetLastScene(string sceneName)
     {
+        EnsureData();
         data.progress.lastScene = sceneName;
         Save();
     }
 
     public void SetPlayerPosition(Vector2 position)
     {
+        EnsureData();
         data.progress.playerPositionX = position.x;
         data.progress.playerPositionY = position.y;
         data.progress.hasSave = true;
@@ -195,6 +312,7 @@ public class SettingsService
 
     public Vector2 GetSavedPlayerPosition()
     {
+        EnsureData();
         return new Vector2(data.progress.playerPositionX, data.progress.playerPositionY);
     }
 
@@ -205,6 +323,7 @@ public class SettingsService
 
     public void ResetProgress()
     {
+        EnsureData();
         data.progress.lastScene = "PrimeiraFase";
         data.progress.lives = GameplayBalance.PlayerInitialHealth;
         data.progress.coinsCollected = 0;
@@ -217,6 +336,7 @@ public class SettingsService
 
     public void MarkSceneCompleted(string sceneName)
     {
+        EnsureData();
         if (!data.progress.completedScenes.Contains(sceneName))
         {
             data.progress.completedScenes.Add(sceneName);
@@ -226,18 +346,21 @@ public class SettingsService
 
     public void SetLives(int lives)
     {
+        EnsureData();
         data.progress.lives = Mathf.Max(0, lives);
         Save();
     }
 
     public void SetCoins(int coins)
     {
+        EnsureData();
         data.progress.coinsCollected = Mathf.Max(0, coins);
         Save();
     }
 
     private void PersistBindingsToData()
     {
+        EnsureData();
         data.keybindings.Clear();
         foreach (var pair in bindings)
         {
@@ -249,25 +372,21 @@ public class SettingsService
         }
     }
 
-    private static KeyCode GetDefaultKey(GameAction action)
+    private void EnsureData()
     {
-        switch (action)
+        if (data == null)
         {
-            case GameAction.MoveLeft: return KeyCode.A;
-            case GameAction.MoveRight: return KeyCode.D;
-            case GameAction.Jump: return KeyCode.Space;
-            case GameAction.Fire: return KeyCode.Mouse0;
-            case GameAction.Interact: return KeyCode.E;
-            case GameAction.Dash: return KeyCode.LeftShift;
-            case GameAction.Pause: return KeyCode.Escape;
-            case GameAction.Submit: return KeyCode.Return;
-            case GameAction.Cancel: return KeyCode.Backspace;
-            case GameAction.NavigateUp: return KeyCode.UpArrow;
-            case GameAction.NavigateDown: return KeyCode.DownArrow;
-            case GameAction.NavigateLeft: return KeyCode.LeftArrow;
-            case GameAction.NavigateRight: return KeyCode.RightArrow;
-            case GameAction.RangedFire: return KeyCode.Mouse1;
-            default: return KeyCode.None;
+            data = SaveSystem.CreateDefault();
+        }
+
+        EnsureSelectedAttackSpriteVersion();
+    }
+
+    private void EnsureSelectedAttackSpriteVersion()
+    {
+        if (data != null && !PlayerAttackSpriteVersions.IsValid(data.selectedAttackSpriteVersion))
+        {
+            data.selectedAttackSpriteVersion = PlayerAttackSpriteVersions.DefaultVersionId;
         }
     }
 }
@@ -287,6 +406,18 @@ public class AudioService
         settings.OnSettingsApplied += ApplyVolumes;
         RefreshSceneAudioSources();
         ApplyVolumes();
+    }
+
+    public void Dispose()
+    {
+        if (settings != null)
+        {
+            settings.OnSettingsApplied -= ApplyVolumes;
+            settings = null;
+        }
+
+        sources.Clear();
+        audioMixer = null;
     }
 
     public void Register(ManagedAudioSource source)

@@ -16,6 +16,8 @@ public class EnemySceneBootstrap : MonoBehaviour
     private const string PlayerSortingLayer = "Protagonista";
     private const string EnemySortingLayer = "Inimigos";
     private const string GroundSortingLayer = "chao";
+    private const float GroundedWolfSpawnOffset = 0.58f;
+    private const float FlyingEnemySpawnOffset = 3.2f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void BootstrapLoadedScene()
@@ -69,6 +71,7 @@ public class EnemySceneBootstrap : MonoBehaviour
 
     private static void ConfigureScene()
     {
+        DisableNonSolidMapColliders();
         SetupGroundColliders();
         OrganizeMapLayers();
         GameObject player = SetupPlayer();
@@ -177,6 +180,29 @@ public class EnemySceneBootstrap : MonoBehaviour
         }
     }
 
+    private static void DisableNonSolidMapColliders()
+    {
+        SpriteRenderer[] renderers = FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (SpriteRenderer renderer in renderers)
+        {
+            if (renderer == null || !IsNonSolidMapName(renderer.gameObject.name))
+            {
+                continue;
+            }
+
+            Collider2D[] colliders = renderer.GetComponents<Collider2D>();
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider == null || collider.isTrigger)
+                {
+                    continue;
+                }
+
+                collider.enabled = false;
+            }
+        }
+    }
+
     private static void ConfigureGroundCollider(GameObject ground, SpriteRenderer renderer)
     {
         BoxCollider2D collider = ground.GetComponent<BoxCollider2D>();
@@ -241,6 +267,7 @@ public class EnemySceneBootstrap : MonoBehaviour
 
         camera.orthographic = true;
         camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 5.2f, 7.2f);
+        camera.transform.localScale = Vector3.one;
 
         if (camera.GetComponent<CameraFollow2D>() == null)
         {
@@ -401,7 +428,7 @@ public class EnemySceneBootstrap : MonoBehaviour
             return;
         }
 
-        float yOffset = isCrow ? 3.2f : 0.72f;
+        float yOffset = isCrow ? FlyingEnemySpawnOffset : GroundedWolfSpawnOffset;
         Vector3 current = enemy.transform.position;
         enemy.transform.position = new Vector3(groundX, groundTop + yOffset, current.z);
     }
@@ -596,7 +623,7 @@ public class EnemySceneBootstrap : MonoBehaviour
     private static bool IsGroundName(string name)
     {
         string lowerName = name.ToLowerInvariant();
-        if (lowerName.Contains("mato") || lowerName.Contains("tree") || lowerName.Contains("arvore") || lowerName.Contains("fundo") || lowerName.Contains("layer") || lowerName.Contains("lua"))
+        if (IsNonSolidMapName(lowerName))
         {
             return false;
         }
@@ -604,7 +631,30 @@ public class EnemySceneBootstrap : MonoBehaviour
         return lowerName.Contains("bloco") ||
                lowerName.Contains("chao") ||
                lowerName.Contains("ground") ||
-               lowerName.Contains("bridge");
+               (lowerName.Contains("bridge") && !lowerName.Contains("decoration"));
+    }
+
+    private static bool IsNonSolidMapName(string name)
+    {
+        string lowerName = name.ToLowerInvariant();
+        return lowerName.Contains("mato") ||
+               lowerName.Contains("grama") ||
+               lowerName.Contains("tree") ||
+               lowerName.Contains("arvore") ||
+               lowerName.Contains("fundo") ||
+               lowerName.Contains("background") ||
+               lowerName.Contains("groundinbackground") ||
+               lowerName.Contains("layer") ||
+               lowerName.Contains("lua") ||
+               lowerName.Contains("nuvem") ||
+               lowerName.Contains("montanha") ||
+               lowerName.Contains("liana") ||
+               lowerName.Contains("rag") ||
+               lowerName.Contains("berrie") ||
+               lowerName.Contains("lamp") ||
+               lowerName.Contains("tocha") ||
+               lowerName.Contains("fogo") ||
+               lowerName.Contains("decoration");
     }
 
     private static bool IsBackgroundName(string name)
@@ -631,8 +681,13 @@ public class EnemySceneBootstrap : MonoBehaviour
                lowerName.Contains("grama") ||
                lowerName.Contains("tree") ||
                lowerName.Contains("arvore") ||
+               lowerName.Contains("liana") ||
+               lowerName.Contains("rag") ||
+               lowerName.Contains("berrie") ||
+               lowerName.Contains("lamp") ||
                lowerName.Contains("tocha") ||
-               lowerName.Contains("fogo");
+               lowerName.Contains("fogo") ||
+               lowerName.Contains("decoration");
     }
 
     private static string GuessBackgroundSortingLayer(string objectName)

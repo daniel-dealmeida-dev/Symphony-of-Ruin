@@ -43,6 +43,11 @@ public class SpawnGameObjects : MonoBehaviour
 
 	void MakeThingToSpawn ()
 	{
+		if (spawnObjects == null || spawnObjects.Length == 0)
+		{
+			return;
+		}
+
 		Vector3 spawnPosition;
 
 		// get a random position between the specified ranges

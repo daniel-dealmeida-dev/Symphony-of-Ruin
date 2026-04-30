@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Configuracoes.unity
     guid: 3154fad690f180e48907292d07250a66
+  - enabled: 1
+    path: Assets/Scenes/SpriteScaleTuning.unity
+    guid: e016177a54d146b28f1c755530504942
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

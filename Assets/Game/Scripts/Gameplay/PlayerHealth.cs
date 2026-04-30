@@ -8,6 +8,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float invulnerabilityDuration = GameplayBalance.PlayerInvulnerabilityAfterHitSeconds;
     [SerializeField] private float knockbackForce = GameplayBalance.PlayerKnockbackForce;
     [SerializeField] private float gameOverDelay = 0.65f;
+    [SerializeField] private float extraDelayAfterDeathAnimation = 0.15f;
     [SerializeField] private SpriteRenderer targetRenderer;
 
     private int currentHealth;
@@ -91,6 +92,7 @@ public class PlayerHealth : MonoBehaviour
         if (movimento != null)
         {
             movimento.AplicarEmpurrao(damageSource, knockbackForce);
+            movimento.TocarDano();
         }
 
         StartCoroutine(InvulnerabilityRoutine());
@@ -130,7 +132,12 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator FinalizarJogoDepoisDaAnimacao()
     {
-        yield return new WaitForSecondsRealtime(gameOverDelay);
+        float duracaoMorte = movimento != null
+            ? movimento.ObterDuracaoAnimacaoMorte(gameOverDelay)
+            : gameOverDelay;
+        float espera = Mathf.Max(gameOverDelay, duracaoMorte + Mathf.Max(0f, extraDelayAfterDeathAnimation));
+
+        yield return new WaitForSecondsRealtime(espera);
         if (GameManager.gm != null)
         {
             GameManager.gm.FinalizarJogo();
