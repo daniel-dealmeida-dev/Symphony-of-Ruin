@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
         GameServices.EnsureInstance();
         Time.timeScale = 1f;
-        EnsureEnemyBootstrap();
+        //EnsureEnemyBootstrap();
         EnsureSceneUi();
         moedasColetadas = GameServices.Instance.Settings.Data.progress.coinsCollected;
         playerRoot = ResolvePlayerRoot();

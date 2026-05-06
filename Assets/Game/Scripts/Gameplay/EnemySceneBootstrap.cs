@@ -73,7 +73,7 @@ public class EnemySceneBootstrap : MonoBehaviour
     {
         DisableNonSolidMapColliders();
         SetupGroundColliders();
-        OrganizeMapLayers();
+       // OrganizeMapLayers();
         GameObject player = SetupPlayer();
         SetupCamera();
         SetupEnemies();
@@ -223,39 +223,39 @@ public class EnemySceneBootstrap : MonoBehaviour
         collider.offset = new Vector2(0f, (localSize.y * 0.5f) - (colliderHeight * 0.5f));
     }
 
-    private static void OrganizeMapLayers()
-    {
-        SpriteRenderer[] renderers = FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-        foreach (SpriteRenderer renderer in renderers)
-        {
-            if (renderer == null)
-            {
-                continue;
-            }
+    //private static void OrganizeMapLayers()
+    //{
+        //SpriteRenderer[] renderers = FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        //foreach (SpriteRenderer renderer in renderers)
+        //{
+            //if (renderer == null)
+           // {
+              //  continue;
+            //}
 
-            string objectName = renderer.gameObject.name;
-            if (IsGroundName(objectName))
-            {
-                SetLayerIfExists(renderer.gameObject, GroundLayerName, false);
-                SetSorting(renderer, GroundSortingLayer, GameplayBalance.TerrainSortingOrder);
-            }
-            else if (IsBackgroundName(objectName))
-            {
-                SetLayerIfExists(renderer.gameObject, BackgroundLayerName, false);
-                SetSorting(renderer, GuessBackgroundSortingLayer(objectName), GameplayBalance.BackgroundSortingOrder);
-            }
-            else if (IsForegroundName(objectName))
-            {
-                SetLayerIfExists(renderer.gameObject, GuessForegroundLayer(objectName), false);
-                SetSorting(renderer, GuessForegroundSortingLayer(objectName), GameplayBalance.ForegroundSortingOrder);
-            }
-            else if (IsDecorationName(objectName))
-            {
-                SetLayerIfExists(renderer.gameObject, GuessDecorationLayer(objectName), false);
-                SetSorting(renderer, GuessDecorationSortingLayer(objectName), GameplayBalance.DecorationSortingOrder);
-            }
-        }
-    }
+            //string objectName = renderer.gameObject.name;
+            //if (IsGroundName(objectName))
+            //{
+                //SetLayerIfExists(renderer.gameObject, GroundLayerName, false);
+              //  SetSorting(renderer, GroundSortingLayer, GameplayBalance.TerrainSortingOrder);
+            //}
+            //else if (IsBackgroundName(objectName))
+            //{
+                //SetLayerIfExists(renderer.gameObject, BackgroundLayerName, false);
+              //  SetSorting(renderer, GuessBackgroundSortingLayer(objectName), GameplayBalance.BackgroundSortingOrder);
+            //}
+            //else if (IsForegroundName(objectName))
+            //{
+                //SetLayerIfExists(renderer.gameObject, GuessForegroundLayer(objectName), false);
+              //  SetSorting(renderer, GuessForegroundSortingLayer(objectName), GameplayBalance.ForegroundSortingOrder);
+            //}
+            //else if (IsDecorationName(objectName))
+            //{
+           //     SetLayerIfExists(renderer.gameObject, GuessDecorationLayer(objectName), false);
+         //       SetSorting(renderer, GuessDecorationSortingLayer(objectName), GameplayBalance.DecorationSortingOrder);
+       //     }
+      //  }
+    //}
 
     private static void SetupCamera()
     {
@@ -709,17 +709,9 @@ public class EnemySceneBootstrap : MonoBehaviour
     private static string GuessForegroundSortingLayer(string objectName)
     {
         string lowerName = objectName.ToLowerInvariant();
-        if (lowerName.Contains("grama") || lowerName.Contains("mato"))
-        {
-            return "Grama";
-        }
+        return lowerName;
 
-        if (lowerName.Contains("tocha") || lowerName.Contains("fogo"))
-        {
-            return "FogoTocha";
-        }
 
-        return "ArvoreFrente";
     }
 
     private static string GuessForegroundLayer(string objectName)
@@ -736,22 +728,8 @@ public class EnemySceneBootstrap : MonoBehaviour
     private static string GuessDecorationSortingLayer(string objectName)
     {
         string lowerName = objectName.ToLowerInvariant();
-        if (lowerName.Contains("grama") || lowerName.Contains("mato"))
-        {
-            return "Grama";
-        }
 
-        if (lowerName.Contains("fogo"))
-        {
-            return "FogoTocha";
-        }
-
-        if (lowerName.Contains("tocha"))
-        {
-            return "Tocha";
-        }
-
-        return "arvore";
+        return lowerName;
     }
 
     private static string GuessDecorationLayer(string objectName)
