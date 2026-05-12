@@ -1,12 +1,10 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Para mudar de fases
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Singleton: Garante que só exista UM GameManager no jogo todo
+    // SINGLETON
     public static GameManager instance;
-
-    // Adicionado para compatibilidade com scripts que usam GameManager.gm
     public static GameManager gm;
 
     [Header("Menus de Interface")]
@@ -16,18 +14,15 @@ public class GameManager : MonoBehaviour
     [Header("Status do Jogo")]
     public int moedasColetadas = 0;
     public bool jogoPausado = false;
-
-    // Adicionado para compatibilidade com scripts que usam GameManager.gm.gameIsOver
     public bool gameIsOver = false;
 
+    // AWAKE
     void Awake()
     {
-        // Configuração do Singleton
         if (instance == null)
         {
             instance = this;
-            gm = this; // define gm também
-            // DontDestroyOnLoad(gameObject); // Opcional: Se quiser que ele dure entre fases
+            gm = this;
         }
         else
         {
@@ -35,68 +30,122 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Update()
+    // START
+    void Start()
     {
-        // Atalho para Pause
-        if (Input.GetKeyDown(KeyCode.Escape))
+        Time.timeScale = 1f;
+
+        if (painelPause != null)
         {
-            if (jogoPausado) Retomar(); else Pausar();
+            painelPause.SetActive(false);
+        }
+
+        if (painelGameOver != null)
+        {
+            painelGameOver.SetActive(false);
         }
     }
 
-    // --- FUNÇÕES DE CONTROLE ---
+    // UPDATE
+    void Update()
+    {
+        // PAUSE
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (jogoPausado)
+            {
+                Retomar();
+            }
+            else
+            {
+                Pausar();
+            }
+        }
 
+        // TESTE DE GAME OVER
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            FinalizarJogo();
+        }
+    }
+
+    // PAUSAR JOGO
     public void Pausar()
     {
         jogoPausado = true;
+
         Time.timeScale = 0f;
-        painelPause.SetActive(true);
+
+        if (painelPause != null)
+        {
+            painelPause.SetActive(true);
+        }
     }
 
+    // RETOMAR JOGO
     public void Retomar()
     {
         jogoPausado = false;
+
         Time.timeScale = 1f;
-        painelPause.SetActive(false);
+
+        if (painelPause != null)
+        {
+            painelPause.SetActive(false);
+        }
     }
 
-    public void FinalizarJogo() // Chamado quando o jogador morre
+    // GAME OVER
+    public void FinalizarJogo()
     {
-        gameIsOver = true; // marca o jogo como acabado
+        gameIsOver = true;
+
         Time.timeScale = 0f;
-        painelGameOver.SetActive(true);
+
+        if (painelGameOver != null)
+        {
+            painelGameOver.SetActive(true);
+        }
     }
 
+    // REINICIAR FASE
     public void ReiniciarFase()
     {
-        gameIsOver = false; // reseta o status do jogo
+        gameIsOver = false;
+
         Time.timeScale = 1f;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Adicionado para compatibilidade com NextLevel.cs
+    // PRÓXIMA FASE
     public void NextLevel()
     {
-        // Mantém o funcionamento padrão: passa para a próxima cena
         int proximaCena = SceneManager.GetActiveScene().buildIndex + 1;
+
         if (proximaCena < SceneManager.sceneCountInBuildSettings)
+        {
+            Time.timeScale = 1f;
+
             SceneManager.LoadScene(proximaCena);
+        }
     }
 
-    // Adicionado para compatibilidade com PlayAgain.cs
+    // RESTART GAME
     public void RestartGame()
     {
-        // Apenas chama ReiniciarFase, mantém o funcionamento
         ReiniciarFase();
     }
 
-    // Adicionado para compatibilidade com ComportamentoAlvo.cs
+    // PONTUAÇÃO
     public void targetHit(int pontuacao, float tempoExtra)
     {
-        // Mantém o funcionamento básico:
-        // aqui você pode adicionar lógica de pontuação ou tempo extra,
-        // se quiser manter exatamente o funcionamento do merge antigo.
         moedasColetadas += pontuacao;
-        // tempoExtra poderia ser usado aqui se houvesse um temporizador, mas mantemos apenas o básico
+    }
+
+    // SAIR DO JOGO
+    public void SairDoJogo()
+    {
+        Application.Quit();
     }
 }
