@@ -53,6 +53,12 @@ public class GameManager : MonoBehaviour
             instance = null;
             gm = null;
         }
+
+        // TESTE DE GAME OVER
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            FinalizarJogo();
+        }
     }
 
     private void Update()
@@ -81,6 +87,7 @@ public class GameManager : MonoBehaviour
     public void Pausar()
     {
         jogoPausado = true;
+
         Time.timeScale = 0f;
         SaveProgress();
         if (painelPause != null)
@@ -89,9 +96,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // RETOMAR JOGO
     public void Retomar()
     {
         jogoPausado = false;
+
         Time.timeScale = 1f;
 
         if (painelPause != null)
@@ -110,10 +119,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // REINICIAR FASE
     public void ReiniciarFase()
     {
         gameIsOver = false;
         Time.timeScale = 1f;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -121,6 +132,7 @@ public class GameManager : MonoBehaviour
     {
         GameServices.Instance.Settings.MarkSceneCompleted(SceneManager.GetActiveScene().name);
         int proximaCena = SceneManager.GetActiveScene().buildIndex + 1;
+
         if (proximaCena < SceneManager.sceneCountInBuildSettings)
         {
             SceneManager.LoadScene(proximaCena);
