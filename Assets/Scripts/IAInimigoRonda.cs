@@ -23,7 +23,7 @@ public class IAInimigoRonda : MonoBehaviour {
 	public bool loop = true; // volta ao início após último ponto?
     public bool atacando = false;
 
-	private Transform transform;
+	private Transform enemyTransform;
 	int i = 0;		// indice do vetor pontos
 	float proxTempo;  // tempo do próximo movimento
 	bool seMovendo = true;
@@ -33,7 +33,7 @@ public class IAInimigoRonda : MonoBehaviour {
 
 	// Inicialização
 	void Start () {
-		transform = inimigo.transform;
+		enemyTransform = inimigo.transform;
 		proxTempo = 0f;
 		seMovendo = true;
 		animator = inimigo.GetComponent<Animator> ();
@@ -48,9 +48,9 @@ public class IAInimigoRonda : MonoBehaviour {
             {
                 if (!seMovendo)
                 {
-                    Vector2 escala = transform.localScale;
+                    Vector2 escala = enemyTransform.localScale;
                     escala.x = escala.x * -1;
-                    transform.localScale = escala;
+                    enemyTransform.localScale = escala;
                     seMovendo = true;
                 }
             }
@@ -66,13 +66,13 @@ public class IAInimigoRonda : MonoBehaviour {
 
 			// move até o próximo ponto
 			float mult = DifficultyRuntime.EnemySpeedMultiplier;
-			transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * mult * Time.deltaTime);
+			enemyTransform.position = Vector3.MoveTowards(enemyTransform.position, pontos[i].transform.position, velocidade * mult * Time.deltaTime);
 
 			//animação
 			animator.SetBool("Andando",true);
 
 			// Se o inimigo chegou no desrino, espera
-            if(Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1) {
+            if(Vector3.Distance(pontos[i].transform.position, enemyTransform.position) <= 0.1) {
 				i++;
 				proxTempo = Time.time + espera;
 				seMovendo = false;
