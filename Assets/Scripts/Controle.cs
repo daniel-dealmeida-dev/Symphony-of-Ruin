@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Controle : MonoBehaviour
 {
-    [Header("Movimento")]
-    public int velocidade = 10;
-    public int forcaDoPulo = 1250;
-
     [Header("Vida")]
     public int vida = 3;
 
@@ -15,267 +9,164 @@ public class Controle : MonoBehaviour
     public Transform terra;
     public LayerMask chao;
 
-    [Header("Joystick")]
-    public FixedJoystick joystick;
-
-    [SerializeField, Range(0f, 1f)]
-    private float joystickDeadZone = 0.15f;
-
-    [SerializeField, Range(0f, 1f)]
-    private float joystickJumpThreshold = 0.65f;
-
-    private float moveX;
-    private bool direita = true;
     private bool noChao;
-    private bool joystickJumpHeld;
+    private bool direita = true;
 
     private Animator animator;
-    private Rigidbody2D corpoRigido;
-    private Rigidbody2D corpo;
-    private MobileJoystick mobileJoystick;
+    private PlayerMovement movement;
 
-    // START
     void Start()
     {
-        GameServices.EnsureInstance();
-        animator = gameObject.GetComponent<Animator>();
-        corpoRigido = gameObject.GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        corpo = GetComponent<Rigidbody2D>();
-
-        if (joystick == null)
-        {
-            joystick = FindFirstObjectByType<FixedJoystick>(FindObjectsInactive.Include);
-        }
-
-        if (joystick == null)
-        {
-            mobileJoystick = MobileJoystick.EnsureInScene();
-        }
-        else
-        {
-            mobileJoystick = FindFirstObjectByType<MobileJoystick>(FindObjectsInactive.Include);
-        }
+        movement = GetComponent<PlayerMovement>();
     }
 
-    // UPDATE
     void Update()
     {
-        moveJogador();
+        VerificarChao();
 
-        // TESTE DE DANO
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            TomarDano(1);
-        }
-    }
+        if (movement != null)
+            movement.ProcessarMovimento();
 
-    private void LateUpdate()
-    {
+        ProcessarPulo();
+        ProcessarAtaque();
+        AtualizarAnimacoes();
         viraJogador();
     }
 
-    // MOVIMENTO
-    void moveJogador()
+    void FixedUpdate()
     {
-        // CONTROLES
-        moveX = GameServices.Instance.Settings.GetHorizontal();
-        noChao = terra != null && Physics2D.Linecast(transform.position, terra.position, chao);
-        bool ataquePressionado =
-            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine1) ||
-            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine2) ||
-            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine3) ||
-            GameServices.Instance.Settings.GetButtonDown(GameAction.AttackLine4);
-        bool puloPressionado = GameServices.Instance.Settings.GetButtonDown(GameAction.Jump);
-        if (ataquePressionado)
-        moveX = pegaMovimentoHorizontal();
+        if (movement != null)
+            movement.AplicarMovimento();
+    }
+
+    // ======================
+    // CHÃO
+    // ======================
+
+    void VerificarChao()
+    {
+        if (terra == null)
+        {
+            noChao = false;
+            return;
+        }
 
         noChao = Physics2D.Linecast(
             transform.position,
             terra.position,
             chao
         );
+    }
 
-        // ATAQUE
+    // ======================
+    // PULO
+    // ======================
+
+    void ProcessarPulo()
+    {
+        bool pulo = Input.GetButtonDown("Jump");
+
+        bool joystickUp = false;
+
+        var joy = GetComponent<PlayerMovement>();
+        if (joy != null && joy.joystick != null)
+        {
+            joystickUp = joy.joystick.Vertical > 0.7f;
+        }
+
+        if ((pulo || joystickUp) && noChao)
+        {
+            pula();
+        }
+    }
+
+    void pula()
+    {
+        Rigidbody2D corpo = GetComponent<Rigidbody2D>();
+
+        if (corpo == null) return;
+
+        corpo.velocity = new Vector2(corpo.velocity.x, 0f);
+        corpo.AddForce(Vector2.up * 1250f);
+    }
+
+    // ======================
+    // ATAQUE
+    // ======================
+
+    void ProcessarAtaque()
+    {
         if (Input.GetButtonDown("Fire1"))
         {
             ataca();
         }
-        if (puloPressionado && noChao)
-
-        // PULO
-        if ((Input.GetButtonDown("Jump") || joystickPediuPulo()) && noChao)
-        {
-            pula();
-        }
-
-        // FÍSICA
-        if (corpoRigido != null)
-        {
-            corpoRigido.velocity = new Vector2(moveX * velocidade, corpoRigido.velocity.y);
-        }
-        corpo.velocity = new Vector2(
-            moveX * velocidade,
-            corpo.velocity.y
-        );
-
-        int camadaChao = LayerMask.NameToLayer("chao");
-        if (camadaChao >= 0 && corpoRigido != null)
-        {
-            Physics2D.IgnoreLayerCollision(this.gameObject.layer, camadaChao, corpoRigido.velocity.y > 0.0f);
-        }
-        Physics2D.IgnoreLayerCollision(
-            this.gameObject.layer,
-            LayerMask.NameToLayer("chao"),
-            (corpo.velocity.y > 0.0f)
-        );
-
-        // ANIMAÇAO
-        if (animator == null)
-        {
-            return;
-        }
-
-        // ANIMAÇÕES
-        animator.SetBool("NoChao", noChao);
-
-        if (moveX != 0)
-        {
-            animator.SetBool("Correndo", true);
-        }
-        else
-        {
-            animator.SetBool("Correndo", false);
-        }
     }
 
-    void ataca(){
-        if (animator != null)
-        {
-            animator.SetTrigger("Ataque");
-        }
-    // MOVIMENTO HORIZONTAL
-    float pegaMovimentoHorizontal()
-    {
-        float entradaJoystick = 0f;
-
-        if (joystick != null)
-        {
-            entradaJoystick = joystick.Horizontal;
-        }
-
-        if (Mathf.Abs(entradaJoystick) < joystickDeadZone && mobileJoystick != null)
-        {
-            entradaJoystick = mobileJoystick.Horizontal;
-        }
-
-        if (Mathf.Abs(entradaJoystick) >= joystickDeadZone)
-        {
-            return entradaJoystick;
-        }
-
-        return Input.GetAxis("Horizontal");
-    }
-
-    // PULO MOBILE
-    bool joystickPediuPulo()
-    {
-        float vertical = 0f;
-
-        if (joystick != null)
-        {
-            vertical = joystick.Vertical;
-        }
-
-        if (Mathf.Abs(vertical) < joystickDeadZone && mobileJoystick != null)
-        {
-            vertical = mobileJoystick.Vertical;
-        }
-
-        bool pressionandoParaCima = vertical >= joystickJumpThreshold;
-
-        bool pediuPulo = pressionandoParaCima && !joystickJumpHeld;
-
-        joystickJumpHeld = pressionandoParaCima;
-
-        return pediuPulo;
-    }
-
-    // ATAQUE
     void ataca()
     {
-        animator.SetTrigger("Ataque");
+        if (animator != null)
+            animator.SetTrigger("Ataque");
     }
 
-    void pula(){
-        if (corpoRigido != null)
-        {
-            corpoRigido.AddForce(Vector2.up * forcaDoPulo);
-        }
-    // PULO
-    void pula()
+    // ======================
+    // ANIMAÇÕES
+    // ======================
+
+    void AtualizarAnimacoes()
     {
-        corpo.AddForce(Vector2.up * forcaDoPulo);
+        if (animator == null) return;
+
+        animator.SetBool("NoChao", noChao);
+
+        float moveX = movement != null ? movement.GetMoveX() : 0f;
+
+        animator.SetBool("Correndo", Mathf.Abs(moveX) > 0.1f);
     }
 
+    // ======================
     // VIRAR PERSONAGEM
+    // ======================
+
     void viraJogador()
     {
+        float moveX = movement != null ? movement.GetMoveX() : 0f;
+
         if (moveX > 0)
-        {
             direita = true;
-        }
         else if (moveX < 0)
-        {
             direita = false;
-        }
 
-        Vector2 escala = transform.localScale;
+        Vector3 scale = transform.localScale;
 
-        if ((escala.x > 0 && !direita) || (escala.x < 0 && direita))
+        if ((scale.x > 0 && !direita) ||
+            (scale.x < 0 && direita))
         {
-            escala.x *= -1;
-            transform.localScale = escala;
+            scale.x *= -1;
+            transform.localScale = scale;
         }
     }
 
-    // TOMAR DANO
+    // ======================
+    // VIDA
+    // ======================
+
     public void TomarDano(int dano)
     {
         vida -= dano;
 
-        Debug.Log("Vida atual: " + vida);
-
         if (vida <= 0)
-        {
             Morrer();
-        }
     }
 
-    // MORTE
     void Morrer()
     {
-        animator.SetTrigger("Morte");
+        if (animator != null)
+            animator.SetTrigger("Morte");
 
-        GameManager.instance.FinalizarJogo();
+        if (GameManager.instance != null)
+            GameManager.instance.FinalizarJogo();
 
         Destroy(gameObject, 1f);
-    }
-
-    // PLATAFORMA MÓVEL
-    void OnCollisionEnter2D(Collision2D outro)
-    {
-        if (outro.gameObject.tag == "PlataformaMovel")
-        {
-            transform.parent = outro.transform;
-        }
-    }
-
-    void OnCollisionExit2D(Collision2D outro)
-    {
-        if (outro.gameObject.tag == "PlataformaMovel")
-        {
-            transform.parent = null;
-        }
     }
 }

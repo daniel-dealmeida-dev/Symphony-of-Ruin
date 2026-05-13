@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      TroncoEscuro-P_0: 3041602494471263433
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
