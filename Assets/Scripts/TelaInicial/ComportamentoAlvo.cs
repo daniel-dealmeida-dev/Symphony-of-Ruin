@@ -1,45 +1,57 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/// <summary>
+/// Alvo destrutível por projétil (2D ou 3D). Atualiza pontuação no <see cref="GameManager"/>.
+/// </summary>
 public class ComportamentoAlvo : MonoBehaviour
 {
-    // impacto do alvo no jogo
     public int pontuacao = 0;
     public float tempoExtra = 0.0f;
-
-    // explode quando atingido?
     public GameObject prefabExplosao;
 
-    // quando colidir com outro gameObject...
-    void OnCollisionEnter(Collision newCollision)
+    private void TryHit(GameObject hitObject)
     {
-        // não faça nada se houver um game manager e o jogo já acabou
+        if (GameManager.gm != null && GameManager.gm.gameIsOver)
+        {
+            return;
+        }
+
+        if (hitObject == null || !hitObject.CompareTag("Projetil"))
+        {
+            return;
+        }
+
+        if (prefabExplosao)
+        {
+            Instantiate(prefabExplosao, transform.position, transform.rotation);
+        }
+
         if (GameManager.gm != null)
         {
-            if (GameManager.gm.gameIsOver)
-                return;
+            GameManager.gm.targetHit(pontuacao, tempoExtra);
         }
 
-        // Se foi atingido por um projétil...
-        if (newCollision.gameObject.tag == "Projetil")
+        if (AudioManager.Instance != null)
         {
-            if (prefabExplosao)
-            {
-                // Instancia a explosão na posição e rotação do alvo
-                Instantiate(prefabExplosao, transform.position, transform.rotation);
-            }
-
-            // se o game manager existir, altere o tempo e placar conforme o alvo
-            if (GameManager.gm != null)
-            {
-                GameManager.gm.targetHit(pontuacao, tempoExtra);
-            }
-
-            // destrua o projétil
-            Destroy(newCollision.gameObject);
-
-            // autodestrua-se
-            Destroy(gameObject);
+            AudioManager.Instance.PlayCollect();
         }
+
+        Destroy(hitObject);
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision newCollision)
+    {
+        TryHit(newCollision.gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        TryHit(collision.gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        TryHit(other.gameObject);
     }
 }

@@ -23,6 +23,12 @@ public class CanvasMenuScript : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    /// <summary>Abre o painel de créditos (pode ser ligado a um botão no Inspector).</summary>
+    public void OpenCredits()
+    {
+        CreditsOverlay.Show();
+    }
+
     // Método para fechar o jogo
     public void FecharAplicativo()
     {

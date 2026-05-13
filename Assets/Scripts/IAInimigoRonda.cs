@@ -65,7 +65,8 @@ public class IAInimigoRonda : MonoBehaviour {
 		if ((pontos.Length != 0) && (seMovendo)) {
 
 			// move até o próximo ponto
-			transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * Time.deltaTime);
+			float mult = DifficultyRuntime.EnemySpeedMultiplier;
+			transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * mult * Time.deltaTime);
 
 			//animação
 			animator.SetBool("Andando",true);

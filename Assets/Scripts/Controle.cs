@@ -177,6 +177,11 @@ public class Controle : MonoBehaviour
     void pula()
     {
         corpo.AddForce(Vector2.up * forcaDoPulo);
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayJump();
+        }
     }
 
     // VIRAR PERSONAGEM
@@ -213,12 +218,26 @@ public class Controle : MonoBehaviour
         }
     }
 
+    public void ForcarMorte()
+    {
+        vida = 0;
+        Morrer();
+    }
+
     // MORTE
     void Morrer()
     {
         animator.SetTrigger("Morte");
 
-        GameManager.instance.FinalizarJogo();
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayDeathOrHit();
+        }
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.FinalizarJogo();
+        }
 
         Destroy(gameObject, 1f);
     }

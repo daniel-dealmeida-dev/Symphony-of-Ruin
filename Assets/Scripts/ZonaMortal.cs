@@ -6,14 +6,24 @@ public class ZonaMortal : MonoBehaviour
 {
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.CompareTag("Player"))
         {
-            // se for o jogador, entao cause sua morte com dano maximo
-            other.gameObject.GetComponent<Saude>().danoMax();
+            Saude saude = other.gameObject.GetComponent<Saude>();
+            if (saude != null)
+            {
+                saude.danoMax();
+                return;
+            }
+
+            Controle controle = other.gameObject.GetComponent<Controle>();
+            if (controle != null)
+            {
+                controle.ForcarMorte();
+            }
+
+            return;
         }
-        else
-        { // se for qualquer outra coisa, como um inimigo caindo por ex, destrua o objeto
-            Object.Destroy(other.gameObject);
-        }
+
+        Object.Destroy(other.gameObject);
     }
 }
