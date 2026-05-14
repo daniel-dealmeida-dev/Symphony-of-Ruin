@@ -3,11 +3,11 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CameraFollow2D : MonoBehaviour
 {
-    [SerializeField] private Vector3 offset = new Vector3(0f, 1.25f, -25f);
-    [SerializeField] private float smoothTime = 0.12f;
-    [SerializeField] private Vector2 deadZone = new Vector2(0.75f, 0.35f);
-    [SerializeField] private float lookAheadDistance = 1.15f;
-    [SerializeField] private float lookAheadSmoothTime = 0.18f;
+    [SerializeField] private Vector3 offset = new Vector3(0f, 4.5f, -22f);
+    [SerializeField] private float smoothTime = 0.5f;
+    [SerializeField] private Vector2 deadZone = new Vector2(0.45f, 0.2f);
+    [SerializeField] private float lookAheadDistance = 2f;
+    [SerializeField] private float lookAheadSmoothTime = 0.12f;
     [SerializeField] private float maxFollowSpeed = 32f;
     [SerializeField] private float snapDistance = 12f;
     [SerializeField] private float verticalPadding = 2.3f;
