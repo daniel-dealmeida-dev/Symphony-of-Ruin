@@ -14,6 +14,10 @@ public static class UiImageMaterialHotfix
         _initialized = true;
 
         SceneManager.sceneLoaded += (_, __) => Apply();
+        var runner = new GameObject("UiMaterialHotfixRunner");
+        Object.DontDestroyOnLoad(runner);
+        runner.hideFlags = HideFlags.HideAndDontSave;
+        runner.AddComponent<UiMaterialHotfixRunner>();
         Apply();
     }
 
@@ -48,5 +52,18 @@ public static class UiImageMaterialHotfix
         {
             name = "Runtime UI Default Material"
         };
+    }
+
+    private sealed class UiMaterialHotfixRunner : MonoBehaviour
+    {
+        private float _nextApplyTime;
+
+        private void Update()
+        {
+            if (Time.unscaledTime < _nextApplyTime) return;
+
+            _nextApplyTime = Time.unscaledTime + 0.5f;
+            Apply();
+        }
     }
 }

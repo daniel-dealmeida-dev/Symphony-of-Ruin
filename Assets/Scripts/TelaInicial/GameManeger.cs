@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     private Text hudText;
     private GameObject attackButtonsRoot;
+    private GameObject jumpButtonRoot;
     private SettingsPanelController settingsPanelController;
     private Transform playerRoot;
     private bool pauseInputReleased = true;
@@ -230,10 +231,16 @@ public class GameManager : MonoBehaviour
         }
 
         EnsureAttackButtons(canvas.transform);
+        EnsureJumpButton(canvas.transform);
 
         if (attackButtonsRoot != null)
         {
             attackButtonsRoot.transform.SetAsLastSibling();
+        }
+
+        if (jumpButtonRoot != null)
+        {
+            jumpButtonRoot.transform.SetAsLastSibling();
         }
 
         if (painelPause != null)
@@ -373,6 +380,51 @@ public class GameManager : MonoBehaviour
         textRect.offsetMax = Vector2.zero;
     }
 
+    private void EnsureJumpButton(Transform canvasTransform)
+    {
+        if (jumpButtonRoot != null || canvasTransform == null)
+        {
+            return;
+        }
+
+        jumpButtonRoot = new GameObject("JumpTouchButtonRoot", typeof(RectTransform));
+        jumpButtonRoot.transform.SetParent(canvasTransform, false);
+
+        var rootRect = jumpButtonRoot.GetComponent<RectTransform>();
+        rootRect.anchorMin = new Vector2(1f, 0f);
+        rootRect.anchorMax = new Vector2(1f, 0f);
+        rootRect.pivot = new Vector2(1f, 0f);
+        rootRect.anchoredPosition = new Vector2(-268f, 76f);
+        rootRect.sizeDelta = new Vector2(112f, 112f);
+
+        var buttonObject = new GameObject("JumpButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        buttonObject.transform.SetParent(jumpButtonRoot.transform, false);
+
+        var rect = buttonObject.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        var image = buttonObject.GetComponent<Image>();
+        image.color = new Color(0.08f, 0.11f, 0.16f, 0.72f);
+
+        var touchButton = buttonObject.AddComponent<JumpTouchButton>();
+        touchButton.Initialize(this, image);
+
+        var text = CreateText(buttonObject.transform, "Label", TextAnchor.MiddleCenter, 28);
+        text.text = "PULAR";
+        text.fontStyle = FontStyle.Bold;
+        text.color = new Color(0.9f, 0.96f, 1f, 1f);
+        text.raycastTarget = false;
+
+        var textRect = text.GetComponent<RectTransform>();
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.offsetMin = Vector2.zero;
+        textRect.offsetMax = Vector2.zero;
+    }
+
     public void SolicitarAtaquePeloHud(int attackIndex)
     {
         if (EventSystem.current != null)
@@ -387,6 +439,29 @@ public class GameManager : MonoBehaviour
         }
 
         movimento.SolicitarAtaqueGuitarra(attackIndex);
+    }
+
+    public void DefinirPuloPeloHud(bool pressionado)
+    {
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        MovimentoJogador movimento = FindFirstObjectByType<MovimentoJogador>();
+        if (movimento == null)
+        {
+            return;
+        }
+
+        if (pressionado)
+        {
+            movimento.PressionarPuloMobile();
+        }
+        else
+        {
+            movimento.SoltarPuloMobile();
+        }
     }
 
     private void RestoreSavedPlayerPosition()
@@ -579,6 +654,72 @@ internal class AttackTouchButton : MonoBehaviour, IPointerClickHandler, IPointer
         if (targetImage != null)
         {
             targetImage.color = pressed ? PressedColor : NormalColor;
+        }
+    }
+}
+
+internal class JumpTouchButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+{
+    private static readonly Color NormalColor = new Color(0.08f, 0.11f, 0.16f, 0.72f);
+    private static readonly Color PressedColor = new Color(0.48f, 0.72f, 1f, 0.92f);
+
+    private GameManager gameManager;
+    private Image targetImage;
+    private bool pressed;
+
+    public void Initialize(GameManager manager, Image image)
+    {
+        gameManager = manager;
+        targetImage = image;
+        SetPressed(false);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        pressed = true;
+        SetPressed(true);
+        if (gameManager != null)
+        {
+            gameManager.DefinirPuloPeloHud(true);
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        Release();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SetPressed(pressed);
+    }
+
+    private void OnDisable()
+    {
+        Release();
+    }
+
+    private void Release()
+    {
+        if (!pressed)
+        {
+            SetPressed(false);
+            return;
+        }
+
+        pressed = false;
+        SetPressed(false);
+        if (gameManager != null)
+        {
+            gameManager.DefinirPuloPeloHud(false);
+        }
+    }
+
+    private void SetPressed(bool isPressed)
+    {
+        if (targetImage != null)
+        {
+            targetImage.color = isPressed ? PressedColor : NormalColor;
         }
     }
 }

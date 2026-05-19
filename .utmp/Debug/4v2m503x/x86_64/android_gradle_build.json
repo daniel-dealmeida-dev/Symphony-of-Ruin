@@ -1,0 +1,47 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Leo_s\\Documents\\Symphony-of-Ruin\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\CMakeLists.txt",
+    "C:\\Users\\Leo_s\\Documents\\Symphony-of-Ruin\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\CMakeLists.txt",
+    "C:\\Users\\Leo_s\\Documents\\Symphony-of-Ruin\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\GameActivity\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\Leo_s\\AppData\\Local\\UnityEditors\\2023.2.19f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\Leo_s\\Documents\\Symphony-of-Ruin\\.utmp\\Debug\\4v2m503x\\x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\Leo_s\\AppData\\Local\\UnityEditors\\2023.2.19f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\Leo_s\\Documents\\Symphony-of-Ruin\\.utmp\\Debug\\4v2m503x\\x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "game::@d02bb112ea9f9c2ed29f": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "game",
+      "output": "C:\\Users\\Leo_s\\Documents\\Symphony-of-Ruin\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\build\\intermediates\\cxx\\Debug\\4v2m503x\\obj\\x86_64\\libgame.so",
+      "runtimeFiles": []
+    },
+    "swappywrapper::@7e25bd1f32ce224db4e9": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "swappywrapper",
+      "output": "C:\\Users\\Leo_s\\Documents\\Symphony-of-Ruin\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\build\\intermediates\\cxx\\Debug\\4v2m503x\\obj\\x86_64\\libswappywrapper.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "C:\\Users\\Leo_s\\AppData\\Local\\UnityEditors\\2023.2.19f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\NDK\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe",
+      "cppCompilerExecutable": "C:\\Users\\Leo_s\\AppData\\Local\\UnityEditors\\2023.2.19f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\NDK\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

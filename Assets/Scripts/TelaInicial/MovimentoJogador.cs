@@ -8,6 +8,7 @@ using UnityEngine;
 public class MovimentoJogador : MonoBehaviour
 {
     private const string RecursoSpritesAtaqueGuitarraPadrao = PlayerAttackSpriteVersions.DefaultResourcePath;
+    private const string RecursoSpriteInicialSeguro = "SpritsProtagoniista/PlayerIdleConsistent_v3/sheets/player_idle_sheet_416x288";
 
     [Header("Movimento")]
     [SerializeField] private float velocidade = 7.5f;
@@ -15,6 +16,8 @@ public class MovimentoJogador : MonoBehaviour
     [SerializeField] private float desaceleracaoChao = 88f;
     [SerializeField] private float aceleracaoAr = 42f;
     [SerializeField] private float desaceleracaoAr = 34f;
+    [SerializeField] private FixedJoystick joystickMovimento;
+    [SerializeField, Range(0f, 1f)] private float zonaMortaJoystick = 0.12f;
     [Header("Pulo")]
     [SerializeField] private float alturaPuloMaxima = 2.8f;
     [SerializeField] private float alturaPuloMinima = 1.15f;
@@ -31,6 +34,7 @@ public class MovimentoJogador : MonoBehaviour
     [SerializeField] private float multiplicadorPuloCurto = 2.25f;
     [SerializeField] private float multiplicadorTopoPulo = 0.9f;
     [SerializeField] private float limiarVelocidadeTopoPulo = 1.2f;
+    [SerializeField] private float tempoMinimoPuloMobileSegurado = 0.42f;
 
     [Header("Combate")]
     [SerializeField] private int danoAtaque = 1;
@@ -62,6 +66,10 @@ public class MovimentoJogador : MonoBehaviour
     private bool noChao;
     private bool atacando;
     private bool puloSegurado;
+    private bool puloMobileSegurado;
+    private bool puloMobilePressionadoNesteFrame;
+    private bool puloMobileSoltoNesteFrame;
+    private float manterPuloMobileAte;
     private bool controlesAtivos = true;
     private Animator animator;
     private string estadoAtual;
@@ -96,6 +104,7 @@ public class MovimentoJogador : MonoBehaviour
         ConfigurarFisica();
         CachearParametrosAnimator();
         CarregarQuadrosAtaqueGuitarra();
+        AplicarSpriteInicialSeguro();
         direita = transform.localScale.x >= 0f;
     }
 
@@ -118,6 +127,7 @@ public class MovimentoJogador : MonoBehaviour
         {
             moveX = 0f;
             puloSegurado = false;
+            LimparEntradaMobile();
             if (!morto)
             {
                 AtualizaAnimacao();
@@ -126,16 +136,22 @@ public class MovimentoJogador : MonoBehaviour
             return;
         }
 
-        moveX = GameServices.Instance.Settings.GetHorizontal();
+        moveX = ObterEntradaHorizontal();
         AtualizarDirecaoPorEntrada();
-        puloSegurado = GameServices.Instance.Settings.GetButton(GameAction.Jump);
+        bool puloTecladoSegurado = GameServices.Instance.Settings.GetButton(GameAction.Jump);
+        bool puloTecladoPressionado = GameServices.Instance.Settings.GetButtonDown(GameAction.Jump);
+        bool puloTecladoSolto = GameServices.Instance.Settings.GetButtonUp(GameAction.Jump);
+        bool puloMobilePressionado = ConsumirPuloMobilePressionado();
+        ConsumirPuloMobileSolto();
 
-        if (GameServices.Instance.Settings.GetButtonDown(GameAction.Jump))
+        puloSegurado = puloTecladoSegurado || puloMobileSegurado || Time.time < manterPuloMobileAte;
+
+        if (puloTecladoPressionado || puloMobilePressionado)
         {
             contadorBufferPulo = tempoBufferPulo;
         }
 
-        if (GameServices.Instance.Settings.GetButtonUp(GameAction.Jump))
+        if (puloTecladoSolto)
         {
             CortarPuloSeNecessario();
         }
@@ -197,6 +213,7 @@ public class MovimentoJogador : MonoBehaviour
         {
             moveX = 0f;
             puloSegurado = false;
+            LimparEntradaMobile();
             if (corpoRigido != null)
             {
                 corpoRigido.velocity = new Vector2(0f, corpoRigido.velocity.y);
@@ -290,6 +307,29 @@ public class MovimentoJogador : MonoBehaviour
         Atacar(indiceSeguro);
     }
 
+    public void PressionarPuloMobile()
+    {
+        if (!puloMobileSegurado)
+        {
+            puloMobilePressionadoNesteFrame = true;
+        }
+
+        puloMobileSegurado = true;
+        manterPuloMobileAte = Mathf.Max(
+            manterPuloMobileAte,
+            Time.time + Mathf.Max(tempoMinimoPuloMobileSegurado, tempoAteTopoPulo));
+    }
+
+    public void SoltarPuloMobile()
+    {
+        if (puloMobileSegurado)
+        {
+            puloMobileSoltoNesteFrame = true;
+        }
+
+        puloMobileSegurado = false;
+    }
+
     private void OnDisable()
     {
         if (rotinaAtaque != null)
@@ -320,6 +360,8 @@ public class MovimentoJogador : MonoBehaviour
             colisor = GetComponent<Collider2D>();
         }
 
+        ResolverJoystickMovimento();
+
         animator = GetComponent<Animator>();
         if (spriteRenderer == null)
         {
@@ -329,6 +371,63 @@ public class MovimentoJogador : MonoBehaviour
                 spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             }
         }
+    }
+
+    private void ResolverJoystickMovimento()
+    {
+        if (joystickMovimento == null)
+        {
+            joystickMovimento = FindFirstObjectByType<FixedJoystick>();
+        }
+    }
+
+    private float ObterEntradaHorizontal()
+    {
+        float entradaTeclado = GameServices.Instance.Settings.GetHorizontal();
+        float entradaJoystick = 0f;
+
+        if (joystickMovimento == null)
+        {
+            ResolverJoystickMovimento();
+        }
+
+        if (joystickMovimento != null)
+        {
+            entradaJoystick = joystickMovimento.Horizontal;
+            if (Mathf.Abs(entradaJoystick) < zonaMortaJoystick)
+            {
+                entradaJoystick = 0f;
+            }
+        }
+
+        if (Mathf.Abs(entradaJoystick) > 0f)
+        {
+            return Mathf.Clamp(entradaJoystick, -1f, 1f);
+        }
+
+        return entradaTeclado;
+    }
+
+    private bool ConsumirPuloMobilePressionado()
+    {
+        bool pressionado = puloMobilePressionadoNesteFrame;
+        puloMobilePressionadoNesteFrame = false;
+        return pressionado;
+    }
+
+    private bool ConsumirPuloMobileSolto()
+    {
+        bool solto = puloMobileSoltoNesteFrame;
+        puloMobileSoltoNesteFrame = false;
+        return solto;
+    }
+
+    private void LimparEntradaMobile()
+    {
+        puloMobileSegurado = false;
+        puloMobilePressionadoNesteFrame = false;
+        puloMobileSoltoNesteFrame = false;
+        manterPuloMobileAte = 0f;
     }
 
     private void ConfigurarFisica()
@@ -680,6 +779,35 @@ public class MovimentoJogador : MonoBehaviour
             Array.Copy(sprites, cursor, quadrosAtaqueGuitarra[linha], 0, quantidade);
             cursor += quantidade;
         }
+    }
+
+    private void AplicarSpriteInicialSeguro()
+    {
+        if (spriteRenderer == null)
+        {
+            return;
+        }
+
+        Sprite atual = spriteRenderer.sprite;
+        bool spriteObsoleto = atual == null
+            || atual.name.IndexOf("personagem-Photoroom", StringComparison.OrdinalIgnoreCase) >= 0
+            || (atual.rect.width >= 700f && atual.rect.height >= 700f);
+
+        if (!spriteObsoleto)
+        {
+            return;
+        }
+
+        Sprite[] spritesIdle = Resources.LoadAll<Sprite>(RecursoSpriteInicialSeguro);
+        if (spritesIdle == null || spritesIdle.Length == 0)
+        {
+            return;
+        }
+
+        Array.Sort(spritesIdle, CompararSpritesAtaqueGuitarra);
+        spriteRenderer.sprite = spritesIdle[0];
+        spriteRenderer.color = Color.white;
+        spriteRenderer.enabled = true;
     }
 
     private int CompararSpritesAtaqueGuitarra(Sprite a, Sprite b)

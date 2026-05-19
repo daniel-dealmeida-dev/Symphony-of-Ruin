@@ -1,0 +1,21 @@
+# ninja log v5
+71	235	8009248425649896	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	3072cf1361463ba3
+3	1245	8009248435819070	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	76ee7c85021447e
+44	954	8009248432918071	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	b4d941042c9434e1
+236	476	8009248427360053	C:/Users/Leo_s/Documents/Symphony-of-Ruin/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1m750w2t/obj/x86_64/libswappywrapper.so	32a332c46aa46866
+52	844	8009248431791696	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	f86926cbd7540d53
+24	935	8009248432737039	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	a60757b054e6eb92
+62	898	8009248432386574	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	5bc534c567e5854
+36	872	8009248432089407	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	e8d29ba00fc3564c
+16	1147	8009248434816222	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	929950f0691f466a
+1245	1478	8009248437225158	C:/Users/Leo_s/Documents/Symphony-of-Ruin/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1m750w2t/obj/x86_64/libgame.so	7c44200e4f605d03
+43	155	8009290851449337	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	3072cf1361463ba3
+156	392	8009290853156699	C:/Users/Leo_s/Documents/Symphony-of-Ruin/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1m750w2t/obj/x86_64/libswappywrapper.so	32a332c46aa46866
+25	595	8009290855847516	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	f86926cbd7540d53
+11	610	8009290855948157	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	e8d29ba00fc3564c
+36	621	8009290856065204	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	5bc534c567e5854
+32	661	8009290856441840	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	b4d941042c9434e1
+20	722	8009290857072138	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	a60757b054e6eb92
+16	826	8009290858088368	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	929950f0691f466a
+5	872	8009290858580462	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	76ee7c85021447e
+873	1028	8009290859544925	C:/Users/Leo_s/Documents/Symphony-of-Ruin/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1m750w2t/obj/x86_64/libgame.so	7c44200e4f605d03

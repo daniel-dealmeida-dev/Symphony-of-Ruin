@@ -18,6 +18,20 @@ public class EnemySceneBootstrap : MonoBehaviour
     private const string GroundSortingLayer = "chao";
     private const float GroundedWolfSpawnOffset = 0.58f;
     private const float FlyingEnemySpawnOffset = 3.2f;
+    private const bool EnableFlyingEnemies = false;
+    private const string LegacyPlayerSpriteNameFragment = "personagem-Photoroom";
+    private const string SafeIdleSpriteResourcePath = "SpritsProtagoniista/PlayerIdleConsistent_v3/sheets/player_idle_sheet_416x288";
+    private static readonly string[] PlayerSpriteNameFragments =
+    {
+        LegacyPlayerSpriteNameFragment,
+        "player_",
+        "PlayerAttack",
+        "PlayerBody",
+        "PlayerIdle",
+        "Pulo10",
+        "PuloSprite",
+        "personagem"
+    };
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void BootstrapLoadedScene()
@@ -41,6 +55,9 @@ public class EnemySceneBootstrap : MonoBehaviour
     private void Start()
     {
         ConfigureScene();
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        StartCoroutine(LogVisibleRendererProbe());
+#endif
     }
 
     public static Bounds CalculatePlayableBounds()
@@ -71,10 +88,12 @@ public class EnemySceneBootstrap : MonoBehaviour
 
     private static void ConfigureScene()
     {
+        DisableMisassignedBackgroundAnimators();
         DisableNonSolidMapColliders();
         SetupGroundColliders();
-       // OrganizeMapLayers();
+        // OrganizeMapLayers();
         GameObject player = SetupPlayer();
+        RemoveLegacyPlayerSpriteGhosts(player);
         SetupCamera();
         SetupEnemies();
         PlacePlayerOnMainMap(player);
@@ -268,6 +287,9 @@ public class EnemySceneBootstrap : MonoBehaviour
         camera.orthographic = true;
         camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 5.2f, 7.2f);
         camera.transform.localScale = Vector3.one;
+        camera.clearFlags = CameraClearFlags.SolidColor;
+        camera.backgroundColor = new Color(0.19215687f, 0.3019608f, 0.4745098f, 1f);
+        camera.allowHDR = false;
 
         if (camera.GetComponent<CameraFollow2D>() == null)
         {
@@ -275,10 +297,314 @@ public class EnemySceneBootstrap : MonoBehaviour
         }
     }
 
+    private static void RemoveLegacyPlayerSpriteGhosts(GameObject player)
+    {
+        Sprite[] safeIdleSprites = null;
+        SpriteRenderer[] renderers = FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (SpriteRenderer renderer in renderers)
+        {
+            if (renderer == null || !UsesAnyPlayerCharacterSprite(renderer))
+            {
+                continue;
+            }
+
+            bool belongsToPlayer = player != null && (renderer.gameObject == player || renderer.transform.IsChildOf(player.transform));
+            if (belongsToPlayer)
+            {
+                if (IsLegacyPlayerSprite(renderer.sprite))
+                {
+                    Sprite replacement = GetSafeIdleSprite(ref safeIdleSprites);
+                    if (replacement != null)
+                    {
+                        renderer.sprite = replacement;
+                        renderer.color = Color.white;
+                        renderer.enabled = true;
+                        Debug.Log($"Codex legacy player sprite replaced on player renderer: {GetHierarchyPath(renderer.transform)} -> {replacement.name}");
+                    }
+                }
+
+                continue;
+            }
+
+            Debug.LogWarning($"Codex stray player sprite ghost disabled: {GetHierarchyPath(renderer.transform)} sprite={GetSpriteDebugName(renderer.sprite)}");
+            renderer.enabled = false;
+            renderer.gameObject.SetActive(false);
+        }
+    }
+
+    private static void DisableMisassignedBackgroundAnimators()
+    {
+        Animator[] animators = FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Animator animator in animators)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null || !LooksLikeCloudObject(animator.gameObject))
+            {
+                continue;
+            }
+
+            if (!UsesPlayerJumpAnimation(animator.runtimeAnimatorController))
+            {
+                continue;
+            }
+
+            Debug.LogWarning($"Codex misassigned background animator disabled: {GetHierarchyPath(animator.transform)} controller={animator.runtimeAnimatorController.name}");
+            animator.enabled = false;
+            animator.runtimeAnimatorController = null;
+        }
+    }
+
+    private static bool LooksLikeCloudObject(GameObject gameObject)
+    {
+        if (gameObject == null)
+        {
+            return false;
+        }
+
+        return ContainsIgnoreCase(gameObject.name, "Nuvens")
+            || ContainsIgnoreCase(GetHierarchyPath(gameObject.transform), "AssetsMapa/Nuvens");
+    }
+
+    private static bool UsesPlayerJumpAnimation(RuntimeAnimatorController controller)
+    {
+        if (controller == null)
+        {
+            return false;
+        }
+
+        if (ContainsIgnoreCase(controller.name, "Pulo"))
+        {
+            return true;
+        }
+
+        AnimationClip[] clips = controller.animationClips;
+        for (int index = 0; index < clips.Length; index++)
+        {
+            AnimationClip clip = clips[index];
+            if (clip != null && ContainsIgnoreCase(clip.name, "Pulo"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool UsesAnyPlayerCharacterSprite(SpriteRenderer renderer)
+    {
+        if (renderer == null)
+        {
+            return false;
+        }
+
+        if (ContainsAnyPlayerSpriteFragment(renderer.sprite != null ? renderer.sprite.name : null))
+        {
+            return true;
+        }
+
+        Texture2D spriteTexture = renderer.sprite != null ? renderer.sprite.texture : null;
+        if (spriteTexture != null && ContainsAnyPlayerSpriteFragment(spriteTexture.name))
+        {
+            return true;
+        }
+
+        Material material = renderer.sharedMaterial;
+        Texture mainTexture = material != null ? material.mainTexture : null;
+        return mainTexture != null && ContainsAnyPlayerSpriteFragment(mainTexture.name);
+    }
+
+    private static bool IsLegacyPlayerSprite(Sprite sprite)
+    {
+        if (sprite == null)
+        {
+            return false;
+        }
+
+        if (ContainsIgnoreCase(sprite.name, LegacyPlayerSpriteNameFragment))
+        {
+            return true;
+        }
+
+        Texture2D texture = sprite.texture;
+        return texture != null && ContainsIgnoreCase(texture.name, LegacyPlayerSpriteNameFragment);
+    }
+
+    private static Sprite GetSafeIdleSprite(ref Sprite[] safeIdleSprites)
+    {
+        if (safeIdleSprites == null)
+        {
+            safeIdleSprites = Resources.LoadAll<Sprite>(SafeIdleSpriteResourcePath);
+        }
+
+        if (safeIdleSprites == null || safeIdleSprites.Length == 0)
+        {
+            return null;
+        }
+
+        for (int index = 0; index < safeIdleSprites.Length; index++)
+        {
+            Sprite sprite = safeIdleSprites[index];
+            if (sprite != null && ContainsIgnoreCase(sprite.name, "player_idle_01"))
+            {
+                return sprite;
+            }
+        }
+
+        return safeIdleSprites[0];
+    }
+
+    private static bool ContainsIgnoreCase(string value, string fragment)
+    {
+        return !string.IsNullOrEmpty(value)
+            && !string.IsNullOrEmpty(fragment)
+            && value.IndexOf(fragment, System.StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    private static bool ContainsAnyPlayerSpriteFragment(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return false;
+        }
+
+        for (int index = 0; index < PlayerSpriteNameFragments.Length; index++)
+        {
+            if (ContainsIgnoreCase(value, PlayerSpriteNameFragments[index]))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string GetSpriteDebugName(Sprite sprite)
+    {
+        if (sprite == null)
+        {
+            return "<none>";
+        }
+
+        string textureName = sprite.texture != null ? sprite.texture.name : "<no texture>";
+        return $"{sprite.name}/{textureName}";
+    }
+
+    private static string GetHierarchyPath(Transform transform)
+    {
+        if (transform == null)
+        {
+            return "<null>";
+        }
+
+        string path = transform.name;
+        Transform current = transform.parent;
+        while (current != null)
+        {
+            path = current.name + "/" + path;
+            current = current.parent;
+        }
+
+        return path;
+    }
+
+    private static System.Collections.IEnumerator LogVisibleRendererProbe()
+    {
+        yield return new WaitForSeconds(2f);
+
+        Camera camera = Camera.main;
+        if (camera == null)
+        {
+            Debug.Log("Codex renderer probe skipped: no main camera");
+            yield break;
+        }
+
+        SpriteRenderer[] renderers = FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (SpriteRenderer renderer in renderers)
+        {
+            if (renderer == null || renderer.sprite == null)
+            {
+                continue;
+            }
+
+            Bounds bounds = renderer.bounds;
+            Vector3 viewportCenter = camera.WorldToViewportPoint(bounds.center);
+            Rect viewportRect = CalculateViewportRect(camera, bounds);
+            bool inTopRight = viewportRect.xMax > 0.55f && viewportRect.yMax > 0.55f && viewportRect.xMin < 1.08f && viewportRect.yMin < 1.08f;
+            bool playerLike = IsLegacyPlayerSprite(renderer.sprite) || ContainsIgnoreCase(renderer.sprite.name, "player") || ContainsIgnoreCase(renderer.sprite.texture.name, "player");
+            if (!inTopRight && !playerLike)
+            {
+                continue;
+            }
+
+            Material material = renderer.sharedMaterial;
+            Texture mainTexture = material != null ? material.mainTexture : null;
+            Debug.Log(
+                $"Codex renderer probe: path={GetHierarchyPath(renderer.transform)} sprite={GetSpriteDebugName(renderer.sprite)} " +
+                $"enabled={renderer.enabled} visible={renderer.isVisible} alpha={renderer.color.a:0.###} " +
+                $"sorting={renderer.sortingLayerName}/{renderer.sortingOrder} worldCenter={bounds.center} worldSize={bounds.size} " +
+                $"viewportCenter={viewportCenter} viewportRect={viewportRect} material={GetObjectName(material)} materialTexture={GetObjectName(mainTexture)}");
+        }
+    }
+
+    private static Rect CalculateViewportRect(Camera camera, Bounds bounds)
+    {
+        Vector3 min = bounds.min;
+        Vector3 max = bounds.max;
+        Vector3[] points =
+        {
+            new Vector3(min.x, min.y, min.z),
+            new Vector3(min.x, max.y, min.z),
+            new Vector3(max.x, min.y, min.z),
+            new Vector3(max.x, max.y, min.z),
+            new Vector3(min.x, min.y, max.z),
+            new Vector3(min.x, max.y, max.z),
+            new Vector3(max.x, min.y, max.z),
+            new Vector3(max.x, max.y, max.z)
+        };
+
+        float minX = float.PositiveInfinity;
+        float minY = float.PositiveInfinity;
+        float maxX = float.NegativeInfinity;
+        float maxY = float.NegativeInfinity;
+        bool hasPoint = false;
+
+        for (int index = 0; index < points.Length; index++)
+        {
+            Vector3 viewportPoint = camera.WorldToViewportPoint(points[index]);
+            if (viewportPoint.z <= 0f)
+            {
+                continue;
+            }
+
+            minX = Mathf.Min(minX, viewportPoint.x);
+            minY = Mathf.Min(minY, viewportPoint.y);
+            maxX = Mathf.Max(maxX, viewportPoint.x);
+            maxY = Mathf.Max(maxY, viewportPoint.y);
+            hasPoint = true;
+        }
+
+        if (!hasPoint)
+        {
+            return new Rect(-10f, -10f, 0f, 0f);
+        }
+
+        return Rect.MinMaxRect(minX, minY, maxX, maxY);
+    }
+
+    private static string GetObjectName(Object target)
+    {
+        return target != null ? target.name : "<none>";
+    }
+
     private static void SetupEnemies()
     {
         foreach (GameObject enemy in FindEnemyInstances(true))
         {
+            if (!EnableFlyingEnemies && IsCrowEnemy(enemy))
+            {
+                enemy.SetActive(false);
+                continue;
+            }
+
             ConfigureEnemy(enemy);
         }
     }
@@ -330,6 +656,12 @@ public class EnemySceneBootstrap : MonoBehaviour
             }
 
             bool isCrow = enemy.name.ToLowerInvariant().Contains("crow");
+            if (!EnableFlyingEnemies && isCrow)
+            {
+                enemy.SetActive(false);
+                continue;
+            }
+
             Vector3 current = enemy.transform.position;
             bool needsPlacement = current.x < bounds.min.x || current.x > bounds.max.x || current.y < bounds.min.y - 4f || !IsSupportedByMainGround(current, isCrow ? 7f : 3f) || IsTooCloseToPlayer(current, player, 3f);
             float desiredX = needsPlacement ? Mathf.Lerp(bounds.min.x, bounds.max.x, existingSlots[i % existingSlots.Length]) : current.x;
@@ -342,7 +674,7 @@ public class EnemySceneBootstrap : MonoBehaviour
         }
 
         GameObject wolfTemplate = FindEnemyTemplate("wolf");
-        GameObject crowTemplate = FindEnemyTemplate("crow");
+        GameObject crowTemplate = EnableFlyingEnemies ? FindEnemyTemplate("crow") : null;
         if (wolfTemplate == null && crowTemplate == null)
         {
             return;
@@ -618,6 +950,11 @@ public class EnemySceneBootstrap : MonoBehaviour
     {
         string lowerName = name.ToLowerInvariant();
         return lowerName.Contains("wolf") || lowerName.Contains("crow");
+    }
+
+    private static bool IsCrowEnemy(GameObject enemy)
+    {
+        return enemy != null && enemy.name.ToLowerInvariant().Contains("crow");
     }
 
     private static bool IsGroundName(string name)
