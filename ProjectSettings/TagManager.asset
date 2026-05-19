@@ -103,3 +103,6 @@ TagManager:
   - name: LuzTocha1
     uniqueID: 2900511759
     locked: 0
+  - name: obstaculo
+    uniqueID: 1840040367
+    locked: 0
