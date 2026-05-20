@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a50b70c75829c37498e91f3c0fd21df1
+guid: 3a34c1199cad39e44ac73e5d305f3bb7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1502505527347820142
-    second: personagem-Photoroom_0
+      213: -4987112831027442877
+    second: "Anima\xE7\xE3o-parado_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,39 +109,26 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: personagem-Photoroom_0
+      name: "Anima\xE7\xE3o-parado_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1024
+        x: 404
+        y: 117
+        width: 440
+        height: 976
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e66b0a601d8f9d410800000000000000
-      internalID: 1502505527347820142
+      spriteID: 34b01d39d473acab0800000000000000
+      internalID: -4987112831027442877
       vertices: []
       indices: 
       edges: []
@@ -149,7 +136,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 859fc38e5c34bac489c2881bca147457
     internalID: 0
     vertices: []
     indices: 
@@ -157,7 +144,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      personagem-Photoroom_0: 1502505527347820142
+      "Anima\xE7\xE3o-parado_0": -4987112831027442877
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

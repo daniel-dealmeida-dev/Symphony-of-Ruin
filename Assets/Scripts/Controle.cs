@@ -14,6 +14,11 @@ public class Controle : MonoBehaviour
     [Header("Chão")]
     public Transform terra;
     public LayerMask chao;
+    [Tooltip("Distância extra para raycast/shape cast a partir da base do collider.")]
+    [SerializeField] private float alcanceChecagemChao = 0.12f;
+
+    [Tooltip("Ignora solo enquanto o corpo já está subindo (evita pulo infinito com IgnoreLayerCollision).")]
+    [SerializeField] private float velocidadeMaximaYZeradaNoChao = 0.08f;
 
     [Header("Joystick")]
     public FixedJoystick joystick;
@@ -31,13 +36,17 @@ public class Controle : MonoBehaviour
 
     private Animator animator;
     private Rigidbody2D corpo;
+    private Collider2D hitbox;
     private MobileJoystick mobileJoystick;
+
+    private static readonly RaycastHit2D[] _hitBuffer = new RaycastHit2D[4];
 
     // START
     void Start()
     {
         animator = GetComponent<Animator>();
         corpo = GetComponent<Rigidbody2D>();
+        hitbox = GetComponent<Collider2D>();
 
         if (joystick == null)
         {
@@ -77,11 +86,7 @@ public class Controle : MonoBehaviour
         // CONTROLES
         moveX = pegaMovimentoHorizontal();
 
-        noChao = Physics2D.Linecast(
-            transform.position,
-            terra.position,
-            chao
-        );
+        noChao = EstaApoiadoNoChao();
 
         // ATAQUE
         if (Input.GetButtonDown("Fire1"))
@@ -118,6 +123,51 @@ public class Controle : MonoBehaviour
         {
             animator.SetBool("Correndo", false);
         }
+    }
+
+    bool EstaApoiadoNoChao()
+    {
+        ContactFilter2D filtro = new ContactFilter2D();
+        filtro.SetLayerMask(chao);
+        filtro.useTriggers = false;
+
+        if (hitbox != null)
+        {
+            int encontrados = hitbox.Cast(Vector2.down, filtro, _hitBuffer, alcanceChecagemChao);
+
+            const float tolDistancia = 0.011f;
+
+            for (int i = 0; i < encontrados; i++)
+            {
+                if (_hitBuffer[i].collider == null ||
+                    ReferenceEquals(_hitBuffer[i].collider.gameObject, gameObject))
+                {
+                    continue;
+                }
+
+                if (_hitBuffer[i].distance <= alcanceChecagemChao + tolDistancia &&
+                    VelocidadePermiteConsiderarNoChao())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        Vector2 pes = terra != null ? (Vector2)terra.position : (Vector2)transform.position;
+
+        pes += Vector2.up * 0.02f;
+        RaycastHit2D golpe = Physics2D.Raycast(pes, Vector2.down, 0.04f + alcanceChecagemChao, chao);
+
+        bool bateNoChao = golpe.collider != null && golpe.collider.gameObject != gameObject;
+
+        return bateNoChao && VelocidadePermiteConsiderarNoChao();
+    }
+
+    bool VelocidadePermiteConsiderarNoChao()
+    {
+        return corpo == null || corpo.velocity.y <= velocidadeMaximaYZeradaNoChao;
     }
 
     // MOVIMENTO HORIZONTAL

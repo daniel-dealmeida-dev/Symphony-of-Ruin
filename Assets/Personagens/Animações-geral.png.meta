@@ -1,82 +1,34 @@
 fileFormatVersion: 2
-guid: c7e81e8ff4792904084cc35ba3b6274c
+guid: 41c2711e2d3364847a53e145abd60640
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6819634061510413085
-    second: Inimigo_0
+      213: -209380324554298848
+    second: "Anima\xE7\xF5es-geral_0"
   - first:
-      213: 3180101784521274483
-    second: Inimigo_1
+      213: 7957887231554143334
+    second: "Anima\xE7\xF5es-geral_1"
   - first:
-      213: -1534839705672732198
-    second: Inimigo_2
+      213: -6862594660665292070
+    second: "Anima\xE7\xF5es-geral_2"
   - first:
-      213: -8125671832913442295
-    second: Inimigo_3
+      213: -1495520887516058810
+    second: "Anima\xE7\xF5es-geral_3"
   - first:
-      213: 2852659692546839106
-    second: Inimigo_4
+      213: 8040418982343726285
+    second: "Anima\xE7\xF5es-geral_4"
   - first:
-      213: 6172875701343525029
-    second: Inimigo_5
+      213: 8992701439346677183
+    second: "Anima\xE7\xF5es-geral_5"
   - first:
-      213: 2810677387896407805
-    second: Inimigo_6
+      213: 9124480596492480466
+    second: "Anima\xE7\xF5es-geral_6"
   - first:
-      213: 8522733322456852004
-    second: Inimigo_7
+      213: -1947795998052885440
+    second: "Anima\xE7\xF5es-geral_7"
   - first:
-      213: 2602603721692445505
-    second: Inimigo_8
-  - first:
-      213: 6400532170171352464
-    second: Inimigo_9
-  - first:
-      213: 893567386973442668
-    second: Inimigo_10
-  - first:
-      213: 597889992499824441
-    second: Inimigo_11
-  - first:
-      213: -6328858497150391632
-    second: Inimigo_12
-  - first:
-      213: 3037653319755415315
-    second: Inimigo_13
-  - first:
-      213: 556916772022806142
-    second: Inimigo_14
-  - first:
-      213: -3191645676969574973
-    second: Inimigo_15
-  - first:
-      213: 749973993458310916
-    second: Inimigo_16
-  - first:
-      213: 464269720010471959
-    second: Inimigo_17
-  - first:
-      213: -388212086629672061
-    second: Inimigo_18
-  - first:
-      213: -9080316687062634088
-    second: Inimigo_19
-  - first:
-      213: 2463743339946479246
-    second: Inimigo_20
-  - first:
-      213: 137269027666404538
-    second: Inimigo_21
-  - first:
-      213: -606624250859191160
-    second: Inimigo_22
-  - first:
-      213: -7966767545827592901
-    second: Inimigo_23
-  - first:
-      213: 6832988290985430879
-    second: Inimigo_24
+      213: 5201522044987131895
+    second: "Anima\xE7\xF5es-geral_8"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -181,144 +133,194 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Inimigo_0
+      name: "Anima\xE7\xF5es-geral_0"
       rect:
         serializedVersion: 2
-        x: 21
-        y: 0
-        width: 230
-        height: 298
+        x: 110
+        y: 358
+        width: 78
+        height: 175
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 98dcb88c599668b4faea7319aa4a29ba
-      internalID: 1954224809
+      spriteID: 02a2cf344b1281df0800000000000000
+      internalID: -209380324554298848
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Inimigo_1
+      name: "Anima\xE7\xF5es-geral_1"
       rect:
         serializedVersion: 2
-        x: 265
-        y: 0
-        width: 230
-        height: 298
+        x: 188
+        y: 357
+        width: 208
+        height: 158
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7c227df5add695f41b432b4c05c32c3d
-      internalID: -2025795812
+      spriteID: 664c66f3648107e60800000000000000
+      internalID: 7957887231554143334
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Inimigo_2
+      name: "Anima\xE7\xF5es-geral_2"
       rect:
         serializedVersion: 2
-        x: 506
-        y: 0
-        width: 206
-        height: 298
+        x: 397
+        y: 360
+        width: 171
+        height: 161
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: c30ccd5d3f5e2fe4c9ddf55124628a4f
-      internalID: 1470660321
+      spriteID: ada8d85048a23c0a0800000000000000
+      internalID: -6862594660665292070
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Inimigo_3
+      name: "Anima\xE7\xF5es-geral_3"
       rect:
         serializedVersion: 2
-        x: 724
-        y: 0
-        width: 206
-        height: 298
+        x: 569
+        y: 359
+        width: 188
+        height: 161
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 4d750c18bc752d94596376e4bc83a630
-      internalID: -304448491
+      spriteID: 64bad692da7de3be0800000000000000
+      internalID: -1495520887516058810
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Inimigo_4
+      name: "Anima\xE7\xF5es-geral_4"
       rect:
         serializedVersion: 2
-        x: 940
-        y: 0
-        width: 234
-        height: 298
+        x: 757
+        y: 359
+        width: 184
+        height: 173
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 074ca2365d92d6a41ac03d3c3770aed9
-      internalID: -615911565
+      spriteID: dc4d7e7e67e459f60800000000000000
+      internalID: 8040418982343726285
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Inimigo_5
+      name: "Anima\xE7\xF5es-geral_5"
       rect:
         serializedVersion: 2
-        x: 1200
-        y: 0
-        width: 234
-        height: 298
+        x: 46
+        y: 146
+        width: 216
+        height: 175
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 86d5412823575004a984cc34a1053c50
-      internalID: 822877330
+      spriteID: fb5176f405e7ccc70800000000000000
+      internalID: 8992701439346677183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Anima\xE7\xF5es-geral_6"
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 146
+        width: 220
+        height: 173
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2dfe0e942caa0ae70800000000000000
+      internalID: 9124480596492480466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Anima\xE7\xF5es-geral_7"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 147
+        width: 253
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04c51211cd908f4e0800000000000000
+      internalID: -1947795998052885440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Anima\xE7\xF5es-geral_8"
+      rect:
+        serializedVersion: 2
+        x: 763
+        y: 147
+        width: 238
+        height: 154
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f742d6bdb48f2840800000000000000
+      internalID: 5201522044987131895
       vertices: []
       indices: 
       edges: []
@@ -326,20 +328,14 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 43b69bf083717244994f8f7824dc81ae
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Inimigo_0: 1954224809
-      Inimigo_1: -2025795812
-      Inimigo_2: 1470660321
-      Inimigo_3: -304448491
-      Inimigo_4: -615911565
-      Inimigo_5: 822877330
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
