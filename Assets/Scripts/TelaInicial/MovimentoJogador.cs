@@ -10,6 +10,9 @@ public class MovimentoJogador : MonoBehaviour
     private const string RecursoSpritesAtaqueGuitarraPadrao = PlayerAttackSpriteVersions.DefaultResourcePath;
     private const string RecursoSpriteInicialSeguro = "SpritsProtagoniista/PlayerIdleConsistent_v3/sheets/player_idle_sheet_416x288";
 
+    [Header("Audio")]
+    [SerializeField] private PlayerAudio playerAudio;
+
     [Header("Movimento")]
     [SerializeField] private float velocidade = 7.5f;
     [SerializeField] private float aceleracaoChao = 72f;
@@ -18,6 +21,7 @@ public class MovimentoJogador : MonoBehaviour
     [SerializeField] private float desaceleracaoAr = 34f;
     [SerializeField] private FixedJoystick joystickMovimento;
     [SerializeField, Range(0f, 1f)] private float zonaMortaJoystick = 0.12f;
+
     [Header("Pulo")]
     [SerializeField] private float alturaPuloMaxima = 2.8f;
     [SerializeField] private float alturaPuloMinima = 1.15f;
@@ -371,6 +375,12 @@ public class MovimentoJogador : MonoBehaviour
                 spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             }
         }
+
+        // ?? ALTERAÇÃO: resolve PlayerAudio automaticamente se não atribuído no Inspector ??
+        if (playerAudio == null)
+        {
+            playerAudio = GetComponent<PlayerAudio>();
+        }
     }
 
     private void ResolverJoystickMovimento()
@@ -633,6 +643,12 @@ public class MovimentoJogador : MonoBehaviour
         estadoAtual = null;
         PlayEstado("Ataque", "Attack");
         SetTriggerSeExistir("Ataque");
+
+        // ?? ALTERAÇÃO: toca o som do ataque correspondente à tecla pressionada ??
+        if (playerAudio != null)
+        {
+            playerAudio.PlayAttackSound(indiceAtaqueVisual);
+        }
 
         if (rotinaAtaque != null)
         {

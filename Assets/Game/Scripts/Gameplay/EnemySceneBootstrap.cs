@@ -18,7 +18,7 @@ public class EnemySceneBootstrap : MonoBehaviour
     private const string GroundSortingLayer = "chao";
     private const float GroundedWolfSpawnOffset = 0.58f;
     private const float FlyingEnemySpawnOffset = 3.2f;
-    private const bool EnableFlyingEnemies = false;
+    private const bool EnableFlyingEnemies = true;
     private const string LegacyPlayerSpriteNameFragment = "personagem-Photoroom";
     private const string SafeIdleSpriteResourcePath = "SpritsProtagoniista/PlayerIdleConsistent_v3/sheets/player_idle_sheet_416x288";
     private static readonly string[] PlayerSpriteNameFragments =
