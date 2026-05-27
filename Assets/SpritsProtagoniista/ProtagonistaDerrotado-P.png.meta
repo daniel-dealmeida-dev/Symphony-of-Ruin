@@ -276,7 +276,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ProtagonistaDerrotado-P_0: 276861877969765637
+      ProtagonistaDerrotado-P_1: 439021141071053780
+      ProtagonistaDerrotado-P_2: 1831645173357633568
+      ProtagonistaDerrotado-P_3: -8691625520743839896
+      ProtagonistaDerrotado-P_4: 4372091143411728606
+      ProtagonistaDerrotado-P_5: 649281783989094329
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
