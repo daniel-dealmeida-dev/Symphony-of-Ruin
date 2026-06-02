@@ -26,13 +26,12 @@ public class Controle : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     private float joystickDeadZone = 0.15f;
 
-    [SerializeField, Range(0f, 1f)]
-    private float joystickJumpThreshold = 0.65f;
-
     private float moveX;
     private bool direita = true;
     private bool noChao;
-    private bool joystickJumpHeld;
+
+    // Flag setada pelo botão de pulo na UI
+    private bool botaoPuloPress = false;
 
     private Animator animator;
     private Rigidbody2D corpo;
@@ -80,10 +79,17 @@ public class Controle : MonoBehaviour
         viraJogador();
     }
 
+    /// <summary>
+    /// Chamado pelo botão de pulo da UI (OnClick ou EventTrigger PointerDown).
+    /// </summary>
+    public void BotaoPulo()
+    {
+        botaoPuloPress = true;
+    }
+
     // MOVIMENTO
     void moveJogador()
     {
-        // CONTROLES
         moveX = pegaMovimentoHorizontal();
 
         noChao = EstaApoiadoNoChao();
@@ -94,11 +100,14 @@ public class Controle : MonoBehaviour
             ataca();
         }
 
-        // PULO
-        if ((Input.GetButtonDown("Jump") || joystickPediuPulo()) && noChao)
+        // PULO — teclado/gamepad OU botão mobile
+        if ((Input.GetButtonDown("Jump") || botaoPuloPress) && noChao)
         {
             pula();
         }
+
+        // Consome o flag após processar
+        botaoPuloPress = false;
 
         // FÍSICA
         corpo.velocity = new Vector2(
@@ -114,15 +123,7 @@ public class Controle : MonoBehaviour
 
         // ANIMAÇÕES
         animator.SetBool("NoChao", noChao);
-
-        if (moveX != 0)
-        {
-            animator.SetBool("Correndo", true);
-        }
-        else
-        {
-            animator.SetBool("Correndo", false);
-        }
+        animator.SetBool("Correndo", moveX != 0);
     }
 
     bool EstaApoiadoNoChao()
@@ -156,12 +157,9 @@ public class Controle : MonoBehaviour
         }
 
         Vector2 pes = terra != null ? (Vector2)terra.position : (Vector2)transform.position;
-
         pes += Vector2.up * 0.02f;
         RaycastHit2D golpe = Physics2D.Raycast(pes, Vector2.down, 0.04f + alcanceChecagemChao, chao);
-
         bool bateNoChao = golpe.collider != null && golpe.collider.gameObject != gameObject;
-
         return bateNoChao && VelocidadePermiteConsiderarNoChao();
     }
 
@@ -176,45 +174,15 @@ public class Controle : MonoBehaviour
         float entradaJoystick = 0f;
 
         if (joystick != null)
-        {
             entradaJoystick = joystick.Horizontal;
-        }
 
         if (Mathf.Abs(entradaJoystick) < joystickDeadZone && mobileJoystick != null)
-        {
             entradaJoystick = mobileJoystick.Horizontal;
-        }
 
         if (Mathf.Abs(entradaJoystick) >= joystickDeadZone)
-        {
             return entradaJoystick;
-        }
 
         return Input.GetAxis("Horizontal");
-    }
-
-    // PULO MOBILE
-    bool joystickPediuPulo()
-    {
-        float vertical = 0f;
-
-        if (joystick != null)
-        {
-            vertical = joystick.Vertical;
-        }
-
-        if (Mathf.Abs(vertical) < joystickDeadZone && mobileJoystick != null)
-        {
-            vertical = mobileJoystick.Vertical;
-        }
-
-        bool pressionandoParaCima = vertical >= joystickJumpThreshold;
-
-        bool pediuPulo = pressionandoParaCima && !joystickJumpHeld;
-
-        joystickJumpHeld = pressionandoParaCima;
-
-        return pediuPulo;
     }
 
     // ATAQUE
@@ -237,14 +205,8 @@ public class Controle : MonoBehaviour
     // VIRAR PERSONAGEM
     void viraJogador()
     {
-        if (moveX > 0)
-        {
-            direita = true;
-        }
-        else if (moveX < 0)
-        {
-            direita = false;
-        }
+        if (moveX > 0) direita = true;
+        else if (moveX < 0) direita = false;
 
         Vector2 escala = transform.localScale;
 
@@ -259,13 +221,10 @@ public class Controle : MonoBehaviour
     public void TomarDano(int dano)
     {
         vida -= dano;
-
         Debug.Log("Vida atual: " + vida);
 
         if (vida <= 0)
-        {
             Morrer();
-        }
     }
 
     public void ForcarMorte()
@@ -280,14 +239,10 @@ public class Controle : MonoBehaviour
         animator.SetTrigger("Morte");
 
         if (AudioManager.Instance != null)
-        {
             AudioManager.Instance.PlayDeathOrHit();
-        }
 
         if (GameManager.instance != null)
-        {
             GameManager.instance.FinalizarJogo();
-        }
 
         Destroy(gameObject, 1f);
     }
@@ -296,16 +251,12 @@ public class Controle : MonoBehaviour
     void OnCollisionEnter2D(Collision2D outro)
     {
         if (outro.gameObject.tag == "PlataformaMovel")
-        {
             transform.parent = outro.transform;
-        }
     }
 
     void OnCollisionExit2D(Collision2D outro)
     {
         if (outro.gameObject.tag == "PlataformaMovel")
-        {
             transform.parent = null;
-        }
     }
 }
