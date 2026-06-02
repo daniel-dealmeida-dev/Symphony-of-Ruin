@@ -18,8 +18,6 @@ public class GameManager : MonoBehaviour
     public bool gameIsOver = false;
 
     private Text hudText;
-    private GameObject attackButtonsRoot;
-    private GameObject jumpButtonRoot;
     private SettingsPanelController settingsPanelController;
     private Transform playerRoot;
     private bool pauseInputReleased = true;
@@ -39,7 +37,6 @@ public class GameManager : MonoBehaviour
 
         GameServices.EnsureInstance();
         Time.timeScale = 1f;
-        //EnsureEnemyBootstrap();
         EnsureSceneUi();
         moedasColetadas = GameServices.Instance.Settings.Data.progress.coinsCollected;
         playerRoot = ResolvePlayerRoot();
@@ -54,17 +51,10 @@ public class GameManager : MonoBehaviour
             instance = null;
             gm = null;
         }
-
-        // TESTE DE GAME OVER
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            FinalizarJogo();
-        }
     }
 
     private void Update()
     {
-
         bool pausePressed = GameServices.Instance.Settings.GetButton(GameAction.Pause);
         if (!pausePressed)
         {
@@ -88,7 +78,6 @@ public class GameManager : MonoBehaviour
     public void Pausar()
     {
         jogoPausado = true;
-
         Time.timeScale = 0f;
         SaveProgress();
         if (painelPause != null)
@@ -97,13 +86,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // RETOMAR JOGO
     public void Retomar()
     {
         jogoPausado = false;
-
         Time.timeScale = 1f;
-
         if (painelPause != null)
         {
             painelPause.SetActive(false);
@@ -120,12 +106,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // REINICIAR FASE
     public void ReiniciarFase()
     {
         gameIsOver = false;
         Time.timeScale = 1f;
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -230,18 +214,7 @@ public class GameManager : MonoBehaviour
             hudTextRect.offsetMax = Vector2.zero;
         }
 
-        EnsureAttackButtons(canvas.transform);
-        EnsureJumpButton(canvas.transform);
-
-        if (attackButtonsRoot != null)
-        {
-            attackButtonsRoot.transform.SetAsLastSibling();
-        }
-
-        if (jumpButtonRoot != null)
-        {
-            jumpButtonRoot.transform.SetAsLastSibling();
-        }
+        // Botoes de toque (ataque e pulo) removidos intencionalmente.
 
         if (painelPause != null)
         {
@@ -252,16 +225,6 @@ public class GameManager : MonoBehaviour
         {
             painelGameOver.transform.SetAsLastSibling();
         }
-    }
-
-    private static void EnsureEnemyBootstrap()
-    {
-        if (FindFirstObjectByType<EnemySceneBootstrap>() != null)
-        {
-            return;
-        }
-
-        new GameObject("EnemySceneBootstrap").AddComponent<EnemySceneBootstrap>();
     }
 
     private void BuildPausePanel(Transform parent)
@@ -283,30 +246,16 @@ public class GameManager : MonoBehaviour
     private void OpenSettingsPanel()
     {
         EnsureSettingsCanvas();
-        if (settingsPanelController == null)
-        {
-            return;
-        }
+        if (settingsPanelController == null) return;
 
-        if (painelPause != null)
-        {
-            painelPause.SetActive(false);
-        }
-
+        if (painelPause != null) painelPause.SetActive(false);
         settingsPanelController.gameObject.SetActive(true);
     }
 
     private void CloseSettingsPanel()
     {
-        if (settingsPanelController != null)
-        {
-            settingsPanelController.gameObject.SetActive(false);
-        }
-
-        if (painelPause != null)
-        {
-            painelPause.SetActive(true);
-        }
+        if (settingsPanelController != null) settingsPanelController.gameObject.SetActive(false);
+        if (painelPause != null) painelPause.SetActive(true);
     }
 
     private void ReturnToMainMenu()
@@ -326,171 +275,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void EnsureAttackButtons(Transform canvasTransform)
-    {
-        if (attackButtonsRoot != null || canvasTransform == null)
-        {
-            return;
-        }
-
-        attackButtonsRoot = new GameObject("AttackTouchButtons", typeof(RectTransform));
-        attackButtonsRoot.transform.SetParent(canvasTransform, false);
-
-        var rootRect = attackButtonsRoot.GetComponent<RectTransform>();
-        rootRect.anchorMin = new Vector2(1f, 0f);
-        rootRect.anchorMax = new Vector2(1f, 0f);
-        rootRect.pivot = new Vector2(1f, 0f);
-        rootRect.anchoredPosition = new Vector2(-28f, 28f);
-        rootRect.sizeDelta = new Vector2(228f, 228f);
-
-        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack1Button", "Z", 0, new Vector2(-118f, 118f));
-        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack2Button", "X", 1, new Vector2(-8f, 118f));
-        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack3Button", "C", 2, new Vector2(-118f, 8f));
-        CreateAttackTouchButton(attackButtonsRoot.transform, "Attack4Button", "V", 3, new Vector2(-8f, 8f));
-    }
-
-    private void CreateAttackTouchButton(Transform parent, string name, string label, int attackIndex, Vector2 anchoredPosition)
-    {
-        var buttonObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        buttonObject.transform.SetParent(parent, false);
-
-        var rect = buttonObject.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(1f, 0f);
-        rect.anchorMax = new Vector2(1f, 0f);
-        rect.pivot = new Vector2(1f, 0f);
-        rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = new Vector2(96f, 96f);
-
-        var image = buttonObject.GetComponent<Image>();
-        image.color = new Color(0.08f, 0.11f, 0.16f, 0.72f);
-
-        var touchButton = buttonObject.AddComponent<AttackTouchButton>();
-        touchButton.Initialize(this, attackIndex, image);
-
-        var text = CreateText(buttonObject.transform, "Label", TextAnchor.MiddleCenter, 34);
-        text.text = label;
-        text.fontStyle = FontStyle.Bold;
-        text.color = new Color(0.9f, 0.96f, 1f, 1f);
-        text.raycastTarget = false;
-
-        var textRect = text.GetComponent<RectTransform>();
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = Vector2.zero;
-        textRect.offsetMax = Vector2.zero;
-    }
-
-    private void EnsureJumpButton(Transform canvasTransform)
-    {
-        if (jumpButtonRoot != null || canvasTransform == null)
-        {
-            return;
-        }
-
-        jumpButtonRoot = new GameObject("JumpTouchButtonRoot", typeof(RectTransform));
-        jumpButtonRoot.transform.SetParent(canvasTransform, false);
-
-        var rootRect = jumpButtonRoot.GetComponent<RectTransform>();
-        rootRect.anchorMin = new Vector2(1f, 0f);
-        rootRect.anchorMax = new Vector2(1f, 0f);
-        rootRect.pivot = new Vector2(1f, 0f);
-        rootRect.anchoredPosition = new Vector2(-268f, 76f);
-        rootRect.sizeDelta = new Vector2(112f, 112f);
-
-        var buttonObject = new GameObject("JumpButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        buttonObject.transform.SetParent(jumpButtonRoot.transform, false);
-
-        var rect = buttonObject.GetComponent<RectTransform>();
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
-
-        var image = buttonObject.GetComponent<Image>();
-        image.color = new Color(0.08f, 0.11f, 0.16f, 0.72f);
-
-        var touchButton = buttonObject.AddComponent<JumpTouchButton>();
-        touchButton.Initialize(this, image);
-
-        var text = CreateText(buttonObject.transform, "Label", TextAnchor.MiddleCenter, 28);
-        text.text = "PULAR";
-        text.fontStyle = FontStyle.Bold;
-        text.color = new Color(0.9f, 0.96f, 1f, 1f);
-        text.raycastTarget = false;
-
-        var textRect = text.GetComponent<RectTransform>();
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = Vector2.zero;
-        textRect.offsetMax = Vector2.zero;
-    }
-
-    public void SolicitarAtaquePeloHud(int attackIndex)
-    {
-        if (EventSystem.current != null)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-
-        MovimentoJogador movimento = FindFirstObjectByType<MovimentoJogador>();
-        if (movimento == null)
-        {
-            return;
-        }
-
-        movimento.SolicitarAtaqueGuitarra(attackIndex);
-    }
-
-    public void DefinirPuloPeloHud(bool pressionado)
-    {
-        if (EventSystem.current != null)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-
-        MovimentoJogador movimento = FindFirstObjectByType<MovimentoJogador>();
-        if (movimento == null)
-        {
-            return;
-        }
-
-        if (pressionado)
-        {
-            movimento.PressionarPuloMobile();
-        }
-        else
-        {
-            movimento.SoltarPuloMobile();
-        }
-    }
-
     private void RestoreSavedPlayerPosition()
     {
-        if (playerRoot == null)
-        {
-            playerRoot = ResolvePlayerRoot();
-        }
-
-        if (playerRoot == null)
-        {
-            return;
-        }
-
-        if (!GameServices.Instance.Settings.HasSave())
-        {
-            return;
-        }
-
-        if (SceneManager.GetActiveScene().name != GameServices.Instance.Settings.Data.progress.lastScene)
-        {
-            return;
-        }
+        if (playerRoot == null) playerRoot = ResolvePlayerRoot();
+        if (playerRoot == null) return;
+        if (!GameServices.Instance.Settings.HasSave()) return;
+        if (SceneManager.GetActiveScene().name != GameServices.Instance.Settings.Data.progress.lastScene) return;
 
         Vector2 savedPosition = GameServices.Instance.Settings.GetSavedPlayerPosition();
-        if (savedPosition == Vector2.zero)
-        {
-            return;
-        }
+        if (savedPosition == Vector2.zero) return;
 
         playerRoot.position = new Vector3(savedPosition.x, savedPosition.y, playerRoot.position.z);
     }
@@ -498,22 +291,13 @@ public class GameManager : MonoBehaviour
     private static Transform ResolvePlayerRoot()
     {
         PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            return playerHealth.transform;
-        }
+        if (playerHealth != null) return playerHealth.transform;
 
         MovimentoJogador movimento = FindFirstObjectByType<MovimentoJogador>();
-        if (movimento != null)
-        {
-            return movimento.transform;
-        }
+        if (movimento != null) return movimento.transform;
 
         GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
-        if (taggedPlayer != null)
-        {
-            return taggedPlayer.transform;
-        }
+        if (taggedPlayer != null) return taggedPlayer.transform;
 
         GameObject legacyRoot = GameObject.Find("Personagem");
         return legacyRoot != null ? legacyRoot.transform : null;
@@ -601,125 +385,5 @@ public class GameManager : MonoBehaviour
         textRect.anchorMax = Vector2.one;
         textRect.offsetMin = Vector2.zero;
         textRect.offsetMax = Vector2.zero;
-    }
-}
-
-internal class AttackTouchButton : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
-{
-    private static readonly Color NormalColor = new Color(0.08f, 0.11f, 0.16f, 0.72f);
-    private static readonly Color PressedColor = new Color(0.48f, 0.72f, 1f, 0.92f);
-
-    private GameManager gameManager;
-    private Image targetImage;
-    private int attackIndex;
-
-    public void Initialize(GameManager manager, int attackLineIndex, Image image)
-    {
-        gameManager = manager;
-        attackIndex = attackLineIndex;
-        targetImage = image;
-        SetPressed(false);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (gameManager != null)
-        {
-            gameManager.SolicitarAtaquePeloHud(attackIndex);
-        }
-
-        if (EventSystem.current != null)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        SetPressed(true);
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        SetPressed(false);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        SetPressed(false);
-    }
-
-    private void SetPressed(bool pressed)
-    {
-        if (targetImage != null)
-        {
-            targetImage.color = pressed ? PressedColor : NormalColor;
-        }
-    }
-}
-
-internal class JumpTouchButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
-{
-    private static readonly Color NormalColor = new Color(0.08f, 0.11f, 0.16f, 0.72f);
-    private static readonly Color PressedColor = new Color(0.48f, 0.72f, 1f, 0.92f);
-
-    private GameManager gameManager;
-    private Image targetImage;
-    private bool pressed;
-
-    public void Initialize(GameManager manager, Image image)
-    {
-        gameManager = manager;
-        targetImage = image;
-        SetPressed(false);
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        pressed = true;
-        SetPressed(true);
-        if (gameManager != null)
-        {
-            gameManager.DefinirPuloPeloHud(true);
-        }
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        Release();
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        SetPressed(pressed);
-    }
-
-    private void OnDisable()
-    {
-        Release();
-    }
-
-    private void Release()
-    {
-        if (!pressed)
-        {
-            SetPressed(false);
-            return;
-        }
-
-        pressed = false;
-        SetPressed(false);
-        if (gameManager != null)
-        {
-            gameManager.DefinirPuloPeloHud(false);
-        }
-    }
-
-    private void SetPressed(bool isPressed)
-    {
-        if (targetImage != null)
-        {
-            targetImage.color = isPressed ? PressedColor : NormalColor;
-        }
     }
 }
