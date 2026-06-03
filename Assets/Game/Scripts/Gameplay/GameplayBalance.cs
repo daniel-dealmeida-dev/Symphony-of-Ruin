@@ -1,10 +1,10 @@
 public static class GameplayBalance
 {
-    public const int PlayerMaxHealth = 5;
+    public const int PlayerMaxHealth = 10;
     public const int PlayerInitialHealth = PlayerMaxHealth;
     public const float PlayerInvulnerabilityAfterHitSeconds = 1.35f;
     public const float PlayerSpawnDamageGraceSeconds = 0.45f;
-    public const float PlayerKnockbackForce = 6f;
+    public const float PlayerKnockbackForce = 23f;
 
     public const float PlayerVisualScale = 0.36f;
     public const float PlayerCollisionWidth = 0.9f;

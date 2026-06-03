@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class CanvasMenuScript : MonoBehaviour
 {
     [Header("Scenes")]
@@ -23,7 +24,7 @@ public class CanvasMenuScript : MonoBehaviour
     {
         GameServices.EnsureInstance();
         EnsureEventSystem();
-        ResolveReferences();
+   
         ResponsiveCanvasUtility.ConfigureAllCanvases();
     }
 
@@ -97,28 +98,17 @@ public class CanvasMenuScript : MonoBehaviour
         UpdateSaveStatus();
     }
 
+
+
     public void FecharAplicativo()
     {
-        Application.Quit();
-
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-    }
-
-    private void ResolveReferences()
-    {
-        if (mainMenuRoot == null)
-        {
-            Canvas canvas = GetComponentInParent<Canvas>();
-            if (canvas == null)
-            {
-                canvas = FindFirstObjectByType<Canvas>();
-            }
-
-            mainMenuRoot = canvas != null ? canvas.gameObject : gameObject;
-        }
-    }
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+    
+}
 
     private void HideBrokenSceneUi()
     {

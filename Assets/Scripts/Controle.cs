@@ -3,7 +3,7 @@ using UnityEngine;
 public class Controle : MonoBehaviour
 {
     [Header("Vida")]
-    public int vida = 3;
+    public int vida = 10;
 
     [Header("Chão")]
     public Transform terra;
