@@ -1,7 +1,15 @@
 using System;
 using System.Data;
+using System.Collections.Generic;
 using UnityEngine;
 using Mono.Data.Sqlite;
+
+[Serializable]
+public class RankingEntry
+{
+    public string PlayerName;
+    public int Score;
+}
 
 public class DatabaseManager : MonoBehaviour
 {
@@ -51,7 +59,7 @@ public class DatabaseManager : MonoBehaviour
 
     public void SavePlayerDataPlayer1(int score)
     {
-        string playerName = "Player1"; // You can replace this with dynamic player names if needed
+        string playerName = "Player1";
 
         try
         {
@@ -153,6 +161,46 @@ public class DatabaseManager : MonoBehaviour
         }
 
         return score;
+    }
+
+    // =========================
+    // TOP 10 RANKING
+    // =========================
+    public List<RankingEntry> GetTop10()
+    {
+        List<RankingEntry> ranking = new List<RankingEntry>();
+
+        try
+        {
+            using (var connection = new SqliteConnection(dbPath))
+            {
+                connection.Open();
+
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText =
+                        "SELECT name, score FROM PlayerScores ORDER BY score DESC LIMIT 10";
+
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ranking.Add(new RankingEntry
+                            {
+                                PlayerName = reader.GetString(0),
+                                Score = reader.GetInt32(1)
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Ranking Error: {ex}");
+        }
+
+        return ranking;
     }
 
     // =========================
