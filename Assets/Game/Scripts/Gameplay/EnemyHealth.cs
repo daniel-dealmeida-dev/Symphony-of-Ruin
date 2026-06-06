@@ -126,6 +126,7 @@ public class EnemyHealth : MonoBehaviour
     private void Die()
     {
         isDead = true;
+        ScoreManager.EnsureInstance().RegisterEnemyDefeated(gameObject);
 
         EnemyPatrol2D patrol = GetComponent<EnemyPatrol2D>();
         if (patrol != null)

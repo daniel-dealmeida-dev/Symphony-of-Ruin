@@ -33,6 +33,7 @@ public class Saude : MonoBehaviour
         if (saude <= 0)
         {
             morto = true;
+            RegistrarPontuacaoSeInimigo();
             if (animator != null)
             {
                 animator.SetTrigger("Morte");
@@ -53,6 +54,7 @@ public class Saude : MonoBehaviour
 
         saude = 0;
         morto = true;
+        RegistrarPontuacaoSeInimigo();
         if (animator != null)
         {
             animator.SetTrigger("Morte");
@@ -67,5 +69,15 @@ public class Saude : MonoBehaviour
     {
         yield return new WaitForSeconds(2.0f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void RegistrarPontuacaoSeInimigo()
+    {
+        if (gameObject.tag == "Player" || GetComponent<EnemyHealth>() != null)
+        {
+            return;
+        }
+
+        ScoreManager.EnsureInstance().RegisterEnemyDefeated(gameObject);
     }
 }

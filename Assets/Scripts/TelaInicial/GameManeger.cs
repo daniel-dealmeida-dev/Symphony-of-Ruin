@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public bool gameIsOver = false;
 
     private Text hudText;
+    private Text gameOverScoreText;
     private SettingsPanelController settingsPanelController;
     private Transform playerRoot;
     private bool pauseInputReleased = true;
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
         moedasColetadas = GameServices.Instance.Settings.Data.progress.coinsCollected;
         playerRoot = ResolvePlayerRoot();
         RestoreSavedPlayerPosition();
+        ScoreManager.EnsureInstance().StartRun();
         UpdateHud();
     }
 
@@ -98,10 +100,16 @@ public class GameManager : MonoBehaviour
 
     public void FinalizarJogo()
     {
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.FinalizeScore();
+        }
+
         gameIsOver = true;
         Time.timeScale = 0f;
         if (painelGameOver != null)
         {
+            UpdateGameOverScoreText();
             painelGameOver.SetActive(true);
         }
     }
@@ -115,6 +123,11 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel()
     {
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.StopForLastPlatform();
+        }
+
         GameServices.Instance.Settings.MarkSceneCompleted(SceneManager.GetActiveScene().name);
         int proximaCena = SceneManager.GetActiveScene().buildIndex + 1;
 
@@ -239,6 +252,7 @@ public class GameManager : MonoBehaviour
     private void BuildGameOverPanel(Transform parent)
     {
         CreateCenteredTitle(parent, "Game Over");
+        gameOverScoreText = CreateGameOverScoreText(parent);
         CreateMenuButton(parent, "Reiniciar", ReiniciarFase, new Vector2(0f, -10f));
         CreateMenuButton(parent, "Menu Inicial", ReturnToMainMenu, new Vector2(0f, -80f));
     }
@@ -273,6 +287,83 @@ public class GameManager : MonoBehaviour
             int maxLives = playerHealth != null ? playerHealth.MaxHealth : GameplayBalance.PlayerMaxHealth;
             hudText.text = "Moedas: " + moedasColetadas + "\nVidas: " + GameServices.Instance.Settings.Data.progress.lives + "/" + maxLives;
         }
+    }
+
+    private void UpdateGameOverScoreText()
+    {
+        EnsureGameOverScoreText();
+        if (gameOverScoreText == null)
+        {
+            return;
+        }
+
+        ScoringData scoring = DatabaseManager.EnsureInstance().GetScoringData();
+        MatchGameOverTextStyle();
+        gameOverScoreText.text = "Score: " + scoring.CurrentScore + "\nBest: " + scoring.HighScore;
+    }
+
+    private void EnsureGameOverScoreText()
+    {
+        if (painelGameOver == null)
+        {
+            return;
+        }
+
+        if (gameOverScoreText != null && gameOverScoreText.transform.IsChildOf(painelGameOver.transform))
+        {
+            return;
+        }
+
+        Transform existing = painelGameOver.transform.Find("GameOverScoreText");
+        if (existing != null)
+        {
+            gameOverScoreText = existing.GetComponent<Text>();
+            if (gameOverScoreText != null)
+            {
+                return;
+            }
+        }
+
+        gameOverScoreText = CreateGameOverScoreText(painelGameOver.transform);
+    }
+
+    private void MatchGameOverTextStyle()
+    {
+        if (painelGameOver == null || gameOverScoreText == null)
+        {
+            return;
+        }
+
+        Text template = null;
+        Transform title = painelGameOver.transform.Find("GameOverText");
+        if (title != null)
+        {
+            template = title.GetComponent<Text>();
+        }
+
+        if (template == null)
+        {
+            Text[] texts = painelGameOver.GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < texts.Length; i++)
+            {
+                if (texts[i] != null && texts[i] != gameOverScoreText)
+                {
+                    template = texts[i];
+                    break;
+                }
+            }
+        }
+
+        if (template == null)
+        {
+            return;
+        }
+
+        gameOverScoreText.font = template.font;
+        gameOverScoreText.color = template.color;
+        gameOverScoreText.fontStyle = template.fontStyle;
+        gameOverScoreText.material = template.material;
+        gameOverScoreText.lineSpacing = template.lineSpacing;
     }
 
     private void RestoreSavedPlayerPosition()
@@ -362,6 +453,17 @@ public class GameManager : MonoBehaviour
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(480f, 60f);
         rect.anchoredPosition = new Vector2(0f, 120f);
+    }
+
+    private static Text CreateGameOverScoreText(Transform parent)
+    {
+        var text = CreateText(parent, "GameOverScoreText", TextAnchor.MiddleCenter, 26);
+        var rect = text.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0.5f, 0.5f);
+        rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.sizeDelta = new Vector2(480f, 80f);
+        rect.anchoredPosition = new Vector2(0f, 58f);
+        return text;
     }
 
     private static void CreateMenuButton(Transform parent, string label, UnityEngine.Events.UnityAction callback, Vector2 position)

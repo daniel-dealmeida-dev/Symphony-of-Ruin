@@ -86,9 +86,9 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
-            DatabaseManager db = FindObjectOfType<DatabaseManager>();
+            DatabaseManager db = DatabaseManager.EnsureInstance();
 
-            int score = ScoreManager.Instance.GetScore();
+            int score = ScoreManager.EnsureInstance().GetScore();
 
             db.SavePlayerData("Player1", score);
             return;

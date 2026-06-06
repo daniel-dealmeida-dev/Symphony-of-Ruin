@@ -15,6 +15,11 @@ public class EndGame : MonoBehaviour
 
     public void ShowEndGame()
     {
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.FinalizeScore();
+        }
+
         Time.timeScale = 0f; 
         endGameUI.SetActive(true);
     }
