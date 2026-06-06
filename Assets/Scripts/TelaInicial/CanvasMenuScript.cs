@@ -3,28 +3,24 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 public class CanvasMenuScript : MonoBehaviour
 {
     [Header("Scenes")]
     [SerializeField] private string newGameSceneName = "PrimeiraFase";
     [SerializeField] private string fallbackLoadSceneName = "PrimeiraFase";
-    [SerializeField] private string spriteScaleTuningSceneName = "SpriteScaleTuning";
 
     [Header("Optional References")]
     [SerializeField] private GameObject mainMenuRoot;
 
     private Transform runtimeMenuRoot;
     private Text statusLabel;
-    private Dropdown attackSpriteDropdown;
-    private bool updatingAttackSpriteDropdown;
     private bool loadingSavedGame;
 
     private void Awake()
     {
         GameServices.EnsureInstance();
         EnsureEventSystem();
-   
+        ResolveReferences();
         ResponsiveCanvasUtility.ConfigureAllCanvases();
     }
 
@@ -48,7 +44,6 @@ public class CanvasMenuScript : MonoBehaviour
 
     public void StartNewGame()
     {
-        ApplySelectedAttackSpriteVersion();
         GameServices.Instance.Settings.ResetProgress();
         ChangeScene(newGameSceneName);
     }
@@ -81,15 +76,8 @@ public class CanvasMenuScript : MonoBehaviour
         EnsureSettingsCanvas();
     }
 
-    public void OpenSpriteScaleTuning()
-    {
-        ApplySelectedAttackSpriteVersion();
-        ChangeScene(spriteScaleTuningSceneName);
-    }
-
     public void ShowMainMenu()
     {
-
         if (runtimeMenuRoot != null)
         {
             runtimeMenuRoot.gameObject.SetActive(true);
@@ -98,39 +86,26 @@ public class CanvasMenuScript : MonoBehaviour
         UpdateSaveStatus();
     }
 
-
-
     public void FecharAplicativo()
     {
+        Application.Quit();
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#else
-    Application.Quit();
 #endif
-    
-}
+    }
 
-    private void HideBrokenSceneUi()
+    private void ResolveReferences()
     {
-        var namesToHide = new[]
+        if (mainMenuRoot == null)
         {
-            "JogarDoInicio",
-            "CarregarJogo",
-            "Sair",
-            "Configuracoes",
-            "Teste SpritesButton",
-            "MainMenuAutoLayout",
-            "MainMenuTitle",
-            "SaveStatusLabel"
-        };
-
-        foreach (var itemName in namesToHide)
-        {
-            Transform target = FindChildRecursive(transform.root, itemName);
-            if (target != null && target != transform)
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null)
             {
-                target.gameObject.SetActive(false);
+                canvas = FindFirstObjectByType<Canvas>();
             }
+
+            mainMenuRoot = canvas != null ? canvas.gameObject : gameObject;
         }
     }
 
@@ -146,10 +121,7 @@ public class CanvasMenuScript : MonoBehaviour
         {
             runtimeMenuRoot = existing;
             CacheStatusLabel();
-            CacheAttackSpriteDropdown();
-            EnsureRuntimeMenuHasAttackSpriteDropdown();
             EnsureRuntimeMenuHasSpriteScaleTuningButton();
-            RefreshAttackSpriteDropdownSelection();
             return;
         }
 
@@ -158,9 +130,6 @@ public class CanvasMenuScript : MonoBehaviour
         ResponsiveCanvasUtility.StretchRoot(rootRect);
 
         var overlay = CreateUiObject("Overlay", runtimeMenuRoot);
-        var overlayImage = overlay.AddComponent<Image>();
-        overlayImage.color = new Color(0.04f, 0.05f, 0.09f, 0.32f);
-        ResponsiveCanvasUtility.StretchRoot(overlay.GetComponent<RectTransform>());
 
         var title = CreateText("Title", runtimeMenuRoot, "Symphony of Ruin", 58, TextAnchor.MiddleCenter);
         var titleRect = title.GetComponent<RectTransform>();
@@ -178,6 +147,9 @@ public class CanvasMenuScript : MonoBehaviour
         subtitleRect.sizeDelta = new Vector2(500f, 40f);
         subtitleRect.anchoredPosition = new Vector2(0f, 208f);
         subtitle.color = new Color(0.82f, 0.88f, 1f, 0.9f);
+        var overlayImage = overlay.AddComponent<Image>();
+        overlayImage.color = new Color(0.04f, 0.05f, 0.09f, 0.32f);
+        ResponsiveCanvasUtility.StretchRoot(overlay.GetComponent<RectTransform>());
 
         var buttonColumn = CreateUiObject("ButtonColumn", runtimeMenuRoot);
         var columnRect = buttonColumn.GetComponent<RectTransform>();
@@ -197,10 +169,8 @@ public class CanvasMenuScript : MonoBehaviour
         var fitter = buttonColumn.AddComponent<ContentSizeFitter>();
         fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-        CreateAttackSpriteVersionSelector(buttonColumn.transform);
         CreateMenuButton(buttonColumn.transform, "Novo Jogo", StartNewGame);
         CreateMenuButton(buttonColumn.transform, "Carregar Jogo", LoadLastGame);
-        CreateMenuButton(buttonColumn.transform, "Teste Sprites", OpenSpriteScaleTuning);
         CreateMenuButton(buttonColumn.transform, "Configuracoes", OpenSettings);
         CreateMenuButton(buttonColumn.transform, "Sair", FecharAplicativo);
 
@@ -212,8 +182,6 @@ public class CanvasMenuScript : MonoBehaviour
         statusRect.sizeDelta = new Vector2(900f, 50f);
         statusRect.anchoredPosition = new Vector2(0f, -370f);
         statusLabel.color = new Color(0.88f, 0.93f, 1f, 1f);
-
-        RefreshAttackSpriteDropdownSelection();
     }
 
     private void CacheStatusLabel()
@@ -222,21 +190,6 @@ public class CanvasMenuScript : MonoBehaviour
         if (labelTransform != null)
         {
             statusLabel = labelTransform.GetComponent<Text>();
-        }
-    }
-
-    private void CacheAttackSpriteDropdown()
-    {
-        var dropdownTransform = FindChildRecursive(runtimeMenuRoot, "AttackSpriteVersionDropdown");
-        if (dropdownTransform != null)
-        {
-            attackSpriteDropdown = dropdownTransform.GetComponent<Dropdown>();
-            if (attackSpriteDropdown != null)
-            {
-                attackSpriteDropdown.onValueChanged.RemoveListener(HandleAttackSpriteDropdownChanged);
-                attackSpriteDropdown.onValueChanged.AddListener(HandleAttackSpriteDropdownChanged);
-                PopulateAttackSpriteDropdownOptions();
-            }
         }
     }
 
@@ -258,264 +211,16 @@ public class CanvasMenuScript : MonoBehaviour
             return;
         }
 
-        string spriteVersion = GameServices.Instance.Settings.GetSelectedAttackSpriteDisplayName();
-
         if (!GameServices.Instance.Settings.HasSave())
         {
-            statusLabel.text = "Nenhum save encontrado. Sprites: " + spriteVersion;
+            statusLabel.text = "Nenhum save encontrado.";
             return;
         }
 
         string sceneName = GameServices.Instance.Settings.Data.progress.lastScene;
         int coins = GameServices.Instance.Settings.Data.progress.coinsCollected;
         int lives = GameServices.Instance.Settings.Data.progress.lives;
-        statusLabel.text = "Save atual: " + sceneName + " | Moedas: " + coins + " | Vidas: " + lives + " | Sprites: " + spriteVersion;
-    }
-
-    private GameObject CreateAttackSpriteVersionSelector(Transform parent)
-    {
-        var selectorObject = CreateUiObject("AttackSpriteVersionSelector", parent);
-        var selectorRect = selectorObject.GetComponent<RectTransform>();
-        selectorRect.sizeDelta = new Vector2(520f, 96f);
-
-        var selectorLayout = selectorObject.AddComponent<VerticalLayoutGroup>();
-        selectorLayout.spacing = 8f;
-        selectorLayout.padding = new RectOffset(0, 0, 0, 0);
-        selectorLayout.childAlignment = TextAnchor.MiddleCenter;
-        selectorLayout.childControlWidth = false;
-        selectorLayout.childControlHeight = false;
-        selectorLayout.childForceExpandWidth = false;
-        selectorLayout.childForceExpandHeight = false;
-
-        var selectorLayoutElement = selectorObject.AddComponent<LayoutElement>();
-        selectorLayoutElement.preferredWidth = 520f;
-        selectorLayoutElement.preferredHeight = 96f;
-
-        var label = CreateText("AttackSpriteVersionLabel", selectorObject.transform, "Versao dos ataques", 20, TextAnchor.MiddleCenter);
-        var labelRect = label.GetComponent<RectTransform>();
-        labelRect.sizeDelta = new Vector2(520f, 28f);
-        var labelLayout = label.gameObject.AddComponent<LayoutElement>();
-        labelLayout.preferredWidth = 520f;
-        labelLayout.preferredHeight = 28f;
-        label.color = new Color(0.82f, 0.88f, 1f, 0.95f);
-
-        attackSpriteDropdown = CreateAttackSpriteDropdown(selectorObject.transform);
-        attackSpriteDropdown.onValueChanged.AddListener(HandleAttackSpriteDropdownChanged);
-        return selectorObject;
-    }
-
-    private Dropdown CreateAttackSpriteDropdown(Transform parent)
-    {
-        var dropdownObject = CreateUiObject("AttackSpriteVersionDropdown", parent);
-        var dropdownRect = dropdownObject.GetComponent<RectTransform>();
-        dropdownRect.sizeDelta = new Vector2(520f, 52f);
-
-        var layoutElement = dropdownObject.AddComponent<LayoutElement>();
-        layoutElement.preferredWidth = 520f;
-        layoutElement.preferredHeight = 52f;
-
-        var image = dropdownObject.AddComponent<Image>();
-        image.color = new Color(0.12f, 0.17f, 0.24f, 0.98f);
-
-        var dropdown = dropdownObject.AddComponent<Dropdown>();
-        dropdown.targetGraphic = image;
-
-        var caption = CreateText("Label", dropdownObject.transform, string.Empty, 22, TextAnchor.MiddleLeft);
-        var captionRect = caption.GetComponent<RectTransform>();
-        captionRect.anchorMin = Vector2.zero;
-        captionRect.anchorMax = Vector2.one;
-        captionRect.offsetMin = new Vector2(18f, 0f);
-        captionRect.offsetMax = new Vector2(-54f, 0f);
-        dropdown.captionText = caption;
-
-        var arrow = CreateText("Arrow", dropdownObject.transform, "v", 22, TextAnchor.MiddleCenter);
-        var arrowRect = arrow.GetComponent<RectTransform>();
-        arrowRect.anchorMin = new Vector2(1f, 0f);
-        arrowRect.anchorMax = new Vector2(1f, 1f);
-        arrowRect.pivot = new Vector2(1f, 0.5f);
-        arrowRect.sizeDelta = new Vector2(46f, 0f);
-        arrowRect.anchoredPosition = Vector2.zero;
-        arrow.color = new Color(0.88f, 0.93f, 1f, 0.9f);
-
-        var template = CreateDropdownTemplate(dropdownObject.transform);
-        dropdown.template = template.GetComponent<RectTransform>();
-        dropdown.itemText = FindChildRecursive(template.transform, "Item Label").GetComponent<Text>();
-        template.SetActive(false);
-
-        attackSpriteDropdown = dropdown;
-        PopulateAttackSpriteDropdownOptions();
-        return dropdown;
-    }
-
-    private GameObject CreateDropdownTemplate(Transform parent)
-    {
-        var template = CreateUiObject("Template", parent);
-        var templateRect = template.GetComponent<RectTransform>();
-        templateRect.anchorMin = new Vector2(0f, 0f);
-        templateRect.anchorMax = new Vector2(1f, 0f);
-        templateRect.pivot = new Vector2(0.5f, 1f);
-        templateRect.sizeDelta = new Vector2(0f, 240f);
-        templateRect.anchoredPosition = new Vector2(0f, -54f);
-
-        var templateImage = template.AddComponent<Image>();
-        templateImage.color = new Color(0.08f, 0.11f, 0.16f, 0.98f);
-
-        var scrollRect = template.AddComponent<ScrollRect>();
-        scrollRect.horizontal = false;
-
-        var viewport = CreateUiObject("Viewport", template.transform);
-        var viewportRect = viewport.GetComponent<RectTransform>();
-        viewportRect.anchorMin = Vector2.zero;
-        viewportRect.anchorMax = Vector2.one;
-        viewportRect.offsetMin = new Vector2(4f, 4f);
-        viewportRect.offsetMax = new Vector2(-4f, -4f);
-        var viewportImage = viewport.AddComponent<Image>();
-        viewportImage.color = new Color(0.08f, 0.11f, 0.16f, 0.9f);
-        viewport.AddComponent<Mask>().showMaskGraphic = false;
-
-        var content = CreateUiObject("Content", viewport.transform);
-        var contentRect = content.GetComponent<RectTransform>();
-        contentRect.anchorMin = new Vector2(0f, 1f);
-        contentRect.anchorMax = new Vector2(1f, 1f);
-        contentRect.pivot = new Vector2(0.5f, 1f);
-        contentRect.sizeDelta = new Vector2(0f, 0f);
-
-        var contentLayout = content.AddComponent<VerticalLayoutGroup>();
-        contentLayout.spacing = 0f;
-        contentLayout.childAlignment = TextAnchor.UpperCenter;
-        contentLayout.childControlWidth = true;
-        contentLayout.childControlHeight = false;
-        contentLayout.childForceExpandWidth = true;
-        contentLayout.childForceExpandHeight = false;
-
-        var contentFitter = content.AddComponent<ContentSizeFitter>();
-        contentFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-        var item = CreateDropdownItem(content.transform);
-
-        scrollRect.viewport = viewportRect;
-        scrollRect.content = contentRect;
-        scrollRect.movementType = ScrollRect.MovementType.Clamped;
-
-        return template;
-    }
-
-    private GameObject CreateDropdownItem(Transform parent)
-    {
-        var item = CreateUiObject("Item", parent);
-        var itemRect = item.GetComponent<RectTransform>();
-        itemRect.sizeDelta = new Vector2(0f, 42f);
-
-        var itemLayout = item.AddComponent<LayoutElement>();
-        itemLayout.preferredHeight = 42f;
-
-        var itemImage = item.AddComponent<Image>();
-        itemImage.color = new Color(0.13f, 0.19f, 0.27f, 0.98f);
-
-        var toggle = item.AddComponent<Toggle>();
-        toggle.targetGraphic = itemImage;
-
-        var itemLabel = CreateText("Item Label", item.transform, string.Empty, 20, TextAnchor.MiddleLeft);
-        var itemLabelRect = itemLabel.GetComponent<RectTransform>();
-        itemLabelRect.anchorMin = Vector2.zero;
-        itemLabelRect.anchorMax = Vector2.one;
-        itemLabelRect.offsetMin = new Vector2(18f, 0f);
-        itemLabelRect.offsetMax = new Vector2(-18f, 0f);
-
-        return item;
-    }
-
-    private void RefreshAttackSpriteDropdownSelection()
-    {
-        if (attackSpriteDropdown == null)
-        {
-            return;
-        }
-
-        string selectedId = GameServices.Instance.Settings.SelectedAttackSpriteVersionId;
-        int selectedIndex = 0;
-        for (int index = 0; index < PlayerAttackSpriteVersions.All.Count; index++)
-        {
-            if (PlayerAttackSpriteVersions.All[index].Id == selectedId)
-            {
-                selectedIndex = index;
-                break;
-            }
-        }
-
-        updatingAttackSpriteDropdown = true;
-        attackSpriteDropdown.value = selectedIndex;
-        attackSpriteDropdown.RefreshShownValue();
-        updatingAttackSpriteDropdown = false;
-    }
-
-    private void PopulateAttackSpriteDropdownOptions()
-    {
-        if (attackSpriteDropdown == null)
-        {
-            return;
-        }
-
-        bool wasUpdating = updatingAttackSpriteDropdown;
-        updatingAttackSpriteDropdown = true;
-        int previousValue = attackSpriteDropdown.value;
-        attackSpriteDropdown.options.Clear();
-        foreach (PlayerAttackSpriteVersion version in PlayerAttackSpriteVersions.All)
-        {
-            attackSpriteDropdown.options.Add(new Dropdown.OptionData(version.DisplayName));
-        }
-
-        attackSpriteDropdown.value = Mathf.Clamp(previousValue, 0, Mathf.Max(0, attackSpriteDropdown.options.Count - 1));
-        attackSpriteDropdown.RefreshShownValue();
-        updatingAttackSpriteDropdown = wasUpdating;
-    }
-
-    private void HandleAttackSpriteDropdownChanged(int selectedIndex)
-    {
-        if (updatingAttackSpriteDropdown || selectedIndex < 0 || selectedIndex >= PlayerAttackSpriteVersions.All.Count)
-        {
-            return;
-        }
-
-        GameServices.Instance.Settings.SetSelectedAttackSpriteVersion(PlayerAttackSpriteVersions.All[selectedIndex].Id);
-        UpdateSaveStatus();
-    }
-
-    private void ApplySelectedAttackSpriteVersion()
-    {
-        if (attackSpriteDropdown == null)
-        {
-            return;
-        }
-
-        int selectedIndex = attackSpriteDropdown.value;
-        if (selectedIndex >= 0 && selectedIndex < PlayerAttackSpriteVersions.All.Count)
-        {
-            GameServices.Instance.Settings.SetSelectedAttackSpriteVersion(PlayerAttackSpriteVersions.All[selectedIndex].Id);
-        }
-    }
-
-    private void EnsureRuntimeMenuHasAttackSpriteDropdown()
-    {
-        if (runtimeMenuRoot == null)
-        {
-            return;
-        }
-
-        ConfigureExistingRuntimeMenuLayout();
-        if (attackSpriteDropdown != null)
-        {
-            return;
-        }
-
-        Transform buttonColumn = FindChildRecursive(runtimeMenuRoot, "ButtonColumn");
-        if (buttonColumn == null)
-        {
-            return;
-        }
-
-        var selectorObject = CreateAttackSpriteVersionSelector(buttonColumn);
-        selectorObject.transform.SetSiblingIndex(0);
+        statusLabel.text = "Save atual: " + sceneName + " | Moedas: " + coins + " | Vidas: " + lives;
     }
 
     private void EnsureRuntimeMenuHasSpriteScaleTuningButton()
@@ -531,26 +236,14 @@ public class CanvasMenuScript : MonoBehaviour
             return;
         }
 
+        // Remove botao "Teste Sprites" se existir
         Transform existingButton = FindChildRecursive(buttonColumn, "Teste SpritesButton");
         if (existingButton != null)
         {
-            Button button = existingButton.GetComponent<Button>();
-            if (button != null)
-            {
-                button.onClick.RemoveListener(OpenSpriteScaleTuning);
-                button.onClick.AddListener(OpenSpriteScaleTuning);
-            }
-
-            ConfigureMenuButtonSize(existingButton.gameObject);
-            return;
+            Object.Destroy(existingButton.gameObject);
         }
 
-        Button tuningButton = CreateMenuButton(buttonColumn, "Teste Sprites", OpenSpriteScaleTuning);
-        Transform loadButton = FindChildRecursive(buttonColumn, "Carregar JogoButton");
-        if (loadButton != null)
-        {
-            tuningButton.transform.SetSiblingIndex(loadButton.GetSiblingIndex() + 1);
-        }
+        ConfigureExistingRuntimeMenuLayout();
     }
 
     private void ConfigureExistingRuntimeMenuLayout()
